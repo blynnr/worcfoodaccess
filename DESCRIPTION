@@ -2,7 +2,7 @@ Package: worcfoodaccess
 Title: What the Package Does (one line, title case)
 Version: 0.0.1
 Authors@R: person("Brenna", "Robeson", email = "brobeson@clarku.edu", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: G346 Final Project
 Depends: R (>= 3.5.2)
 License: What license is it under?
 Encoding: UTF-8
