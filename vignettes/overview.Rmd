@@ -4,7 +4,7 @@ author: "Brenna Robeson"
 date: "May 2, 2019"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Module4 Assignment}
+  %\VignetteIndexEntry{Final Project Progress Assignment}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---

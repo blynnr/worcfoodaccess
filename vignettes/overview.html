@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Brenna Robeson" />
+
+
+<title>Final Project Progress Assignment</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Final Project Progress Assignment</h1>
+<h4 class="author">Brenna Robeson</h4>
+<h4 class="date">May 2, 2019</h4>
+
+
+
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>My final project will contribute to my master’s paper work on critically evaluating food access policies and efforts in Worcester to provide alternative maps which reflect principles of food justice. After a process of interviewing different key stakeholders around the city, I will make food access-related maps grounded in the reflections, needs, and shortcomings of feedback I collected. Along with stakeholder input, my analysis will look beyond the typically-relied upon actors and factors of food access maps, particularly those displayed by food desert maps. Instead, informed by thinking from Critical GIS, the outputs and perspectives I offer will seek to illuminate the often invisibilized actors and processes in urban landscapes which create areas where food accessibility is a concern.</p>
+<p>To mobilize these ideas, I will employ data on census-determined demographics and on Worcester’s built environment to explore how place-based food injustice is produced using R’s geospatial capabilities. Therefore, my objectives include:</p>
+<ul>
+<li>Develop alternative ways of depicting what drives food inaccess in urban contexts</li>
+<li>Explore the specific role of land use, control, and ownership as a basis for these alternative viewpoints</li>
+<li>Use R-based spatial analysis to communicate my findings</li>
+</ul>
+<p>Specifically, I hope that my data and analysis can lead me to develop three main outputs:</p>
+<ol style="list-style-type: decimal">
+<li>Map of Worcester’s Environmental Injustice Populations, based on MassGIS’s Environmental Justice Populations (<a href="https://docs.digital.mass.gov/dataset/massgis-data-2010-us-census-environmental-justice-populations?_ga=2.99772631.856141472.1548130339-583552954.1544722457" class="uri">https://docs.digital.mass.gov/dataset/massgis-data-2010-us-census-environmental-justice-populations?_ga=2.99772631.856141472.1548130339-583552954.1544722457</a>)</li>
+<li>Analysis of the spatial dissonance between properties and their owners and rentership versus ownership patterns in “food deserts” (based on method developed by Shelton (2018))</li>
+<li>Exploration of automobility in urban landscapes and if and how white and affluent populations insulate themselves using parking infrastructure and auto-friendly residential zoning</li>
+</ol>
+</div>
+<div id="approach-and-method" class="section level2">
+<h2>Approach and Method</h2>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<p>The data I will use for my analysis will supply mainly information about demographic patterns throughout the city by census tract and block group, specifications about land ownership and classifications, and features of the built environment.</p>
+<div id="key-datasets-and-visualizations" class="section level4">
+<h4>Key Datasets and Visualizations</h4>
+<div id="usda-food-deserts" class="section level5">
+<h5>USDA Food Deserts</h5>
+<p>Source: USDA</p>
+<p>Year: 2015</p>
+<p>Data Format: Table</p>
+<p>Represents commonly-depended upon by public health policy makers’ measure of food access in city. Census tracts are selected based on two criteria: (1) median income lower than 80% of the state median income and (2) lack of a nearby grocery store</p>
+<p>Key variables to be used are LILATracts_1And10, LILATracts_halfAnd10, and CensusTract for joining with spatial data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in food desert .csv</span>
+worcfd &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/DesAtlas_2015_WorcSel.csv&quot;</span>)
+
+<span class="co"># filter out Worcester-relevant data</span>
+worcfd &lt;-<span class="st"> </span>worcfd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(CensusTract <span class="op">%in%</span><span class="st"> </span><span class="dv">25027727100</span><span class="op">:</span><span class="dv">25027761300</span>)
+
+<span class="co"># view first few rows of data</span>
+<span class="kw">head</span>(worcfd)</code></pre></div>
+<pre><code>## # A tibble: 6 x 147
+##   CensusTract State County Urban POP2010 OHU2010 GroupQuartersFl~ NUMGQTRS
+##         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;            &lt;dbl&gt;    &lt;dbl&gt;
+## 1 25027727100 Mass~ Worce~     1    4806    1546                0      515
+## 2 25027728100 Mass~ Worce~     1    4126    1495                0        0
+## 3 25027728200 Mass~ Worce~     1    3713    1417                0        6
+## 4 25027728300 Mass~ Worce~     1    4544    1692                0      128
+## 5 25027729100 Mass~ Worce~     1    4997    1521                0     1308
+## 6 25027729200 Mass~ Worce~     1    2672    1095                0        0
+## # ... with 139 more variables: PCTGQTRS &lt;dbl&gt;, LILATracts_1And10 &lt;dbl&gt;,
+## #   LILATracts_halfAnd10 &lt;dbl&gt;, LILATracts_1And20 &lt;dbl&gt;,
+## #   LILATracts_Vehicle &lt;dbl&gt;, HUNVFlag &lt;dbl&gt;, LowIncomeTracts &lt;dbl&gt;,
+## #   PovertyRate &lt;dbl&gt;, MedianFamilyIncome &lt;dbl&gt;, LA1and10 &lt;dbl&gt;,
+## #   LAhalfand10 &lt;dbl&gt;, LA1and20 &lt;dbl&gt;, LATracts_half &lt;dbl&gt;,
+## #   LATracts1 &lt;dbl&gt;, LATracts10 &lt;dbl&gt;, LATracts20 &lt;dbl&gt;,
+## #   LATractsVehicle_20 &lt;dbl&gt;, LAPOP1_10 &lt;dbl&gt;, LAPOP05_10 &lt;dbl&gt;,
+## #   LAPOP1_20 &lt;dbl&gt;, LALOWI1_10 &lt;dbl&gt;, LALOWI05_10 &lt;dbl&gt;,
+## #   LALOWI1_20 &lt;dbl&gt;, lapophalf &lt;dbl&gt;, lapophalfshare &lt;dbl&gt;,
+## #   lalowihalf &lt;dbl&gt;, lalowihalfshare &lt;dbl&gt;, lakidshalf &lt;dbl&gt;,
+## #   lakidshalfshare &lt;dbl&gt;, laseniorshalf &lt;dbl&gt;, laseniorshalfshare &lt;dbl&gt;,
+## #   lawhitehalf &lt;dbl&gt;, lawhitehalfshare &lt;dbl&gt;, lablackhalf &lt;dbl&gt;,
+## #   lablackhalfshare &lt;dbl&gt;, laasianhalf &lt;dbl&gt;, laasianhalfshare &lt;dbl&gt;,
+## #   lanhopihalf &lt;dbl&gt;, lanhopihalfshare &lt;dbl&gt;, laaianhalf &lt;dbl&gt;,
+## #   laaianhalfshare &lt;dbl&gt;, laomultirhalf &lt;dbl&gt;, laomultirhalfshare &lt;dbl&gt;,
+## #   lahisphalf &lt;dbl&gt;, lahisphalfshare &lt;dbl&gt;, lahunvhalf &lt;dbl&gt;,
+## #   lahunvhalfshare &lt;dbl&gt;, lasnaphalf &lt;dbl&gt;, lasnaphalfshare &lt;dbl&gt;,
+## #   lapop1 &lt;dbl&gt;, lapop1share &lt;dbl&gt;, lalowi1 &lt;dbl&gt;, lalowi1share &lt;dbl&gt;,
+## #   lakids1 &lt;dbl&gt;, lakids1share &lt;dbl&gt;, laseniors1 &lt;dbl&gt;,
+## #   laseniors1share &lt;dbl&gt;, lawhite1 &lt;dbl&gt;, lawhite1share &lt;dbl&gt;,
+## #   lablack1 &lt;dbl&gt;, lablack1share &lt;dbl&gt;, laasian1 &lt;dbl&gt;,
+## #   laasian1share &lt;dbl&gt;, lanhopi1 &lt;dbl&gt;, lanhopi1share &lt;dbl&gt;,
+## #   laaian1 &lt;dbl&gt;, laaian1share &lt;dbl&gt;, laomultir1 &lt;dbl&gt;,
+## #   laomultir1share &lt;dbl&gt;, lahisp1 &lt;dbl&gt;, lahisp1share &lt;dbl&gt;,
+## #   lahunv1 &lt;dbl&gt;, lahunv1share &lt;dbl&gt;, lasnap1 &lt;dbl&gt;, lasnap1share &lt;dbl&gt;,
+## #   lapop10 &lt;dbl&gt;, lapop10share &lt;dbl&gt;, lalowi10 &lt;dbl&gt;,
+## #   lalowi10share &lt;dbl&gt;, lakids10 &lt;dbl&gt;, lakids10share &lt;dbl&gt;,
+## #   laseniors10 &lt;dbl&gt;, laseniors10share &lt;dbl&gt;, lawhite10 &lt;dbl&gt;,
+## #   lawhite10share &lt;dbl&gt;, lablack10 &lt;dbl&gt;, lablack10share &lt;dbl&gt;,
+## #   laasian10 &lt;dbl&gt;, laasian10share &lt;dbl&gt;, lanhopi10 &lt;dbl&gt;,
+## #   lanhopi10share &lt;dbl&gt;, laaian10 &lt;dbl&gt;, laaian10share &lt;dbl&gt;,
+## #   laomultir10 &lt;dbl&gt;, laomultir10share &lt;dbl&gt;, lahisp10 &lt;dbl&gt;,
+## #   lahisp10share &lt;dbl&gt;, lahunv10 &lt;dbl&gt;, lahunv10share &lt;dbl&gt;,
+## #   lasnap10 &lt;dbl&gt;, ...</code></pre>
+</div>
+<div id="ma-environmental-justice-populations" class="section level5">
+<h5>MA Environmental Justice Populations</h5>
+<p>Source: MassGIS</p>
+<p>Year: 2010</p>
+<p>Data Format: Shapefile</p>
+<p>Extracting Worcester block groups. This file, created by MassGIS, identifies Census block groups which are vulnerable to environmental injustices as defined by three criteria. These include</p>
+<ul>
+<li>25% or more of the population being classified as a “minority” (Minority)</li>
+<li>a median household income at or lower than 65% of the MA state median (Income)</li>
+<li>A 25% or lower prevalence of adult English speakers in households (English Isolation)</li>
+</ul>
+<p>Of these factors, multiple or all can be found to occur in one block group.</p>
+<p>Key variables to be used are EJ_CRITERI, ENGLISH, MINORITY, and INCOME.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in ej pop data</span>
+maejpop &lt;-<span class="st"> </span><span class="kw">read_sf</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/EJ_POLY.shp&quot;</span>)
+
+<span class="co"># project maejpop to EPSG:32618, WSG84 UTM Zone 18N</span>
+maejpop &lt;-<span class="st"> </span><span class="kw">st_transform</span>(<span class="dt">x =</span> maejpop, <span class="dt">crs =</span> <span class="kw">st_crs</span>(<span class="st">&quot;+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs&quot;</span>))
+
+<span class="co"># filter out Worcester-only data and view first few rows</span>
+ejpop &lt;-<span class="st"> </span>maejpop <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_as_sf</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(TOWN <span class="op">==</span><span class="st"> &quot;WORCESTER&quot;</span>)
+<span class="kw">head</span>(ejpop)</code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 27 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 761743.9 ymin: 4678777 xmax: 766330.3 ymax: 4688480
+## epsg (SRID):    32618
+## proj4string:    +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs
+## # A tibble: 6 x 28
+##   AREA_SQFT AREA_ACRES POP100_RE HU100_RE PCTNOHHENG PCT_LT_HS_ MED_HH_INC
+##       &lt;dbl&gt;      &lt;dbl&gt;     &lt;int&gt;    &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;int&gt;
+## 1  1536890.       35.3       983      352      43.6        42.3      29018
+## 2 16925017.      389.       1138      529       0          10.7      51855
+## 3 16542797.      380.       1653      849      16.1        10        58750
+## 4  7571984.      174.       1087      591       3.40       14.3      24219
+## 5  1973912.       45.3      1191      491       4.5         4        35805
+## 6  3681856.       84.5      1342      642      21.6        42.5      18167
+## # ... with 21 more variables: PCT_NO_ENG &lt;dbl&gt;, LOGPL94171 &lt;chr&gt;,
+## #   LOGSF1 &lt;int&gt;, LOGACS0610 &lt;chr&gt;, PCT_EJ_GQ &lt;dbl&gt;, PCT_ALL_GQ &lt;dbl&gt;,
+## #   PCT_MIN &lt;dbl&gt;, ENGLISH &lt;chr&gt;, INCOME &lt;chr&gt;, MINORITY &lt;chr&gt;,
+## #   EJ_CRITERI &lt;chr&gt;, CRIT_CNT &lt;int&gt;, TOWN_ID &lt;int&gt;, TOWN &lt;chr&gt;,
+## #   TOWN2 &lt;chr&gt;, TTL_POP_AC &lt;int&gt;, TTL_HH_ACS &lt;int&gt;, PCTMEDHHIN &lt;dbl&gt;,
+## #   SHAPE_Leng &lt;dbl&gt;, SHAPE_Area &lt;dbl&gt;, geometry &lt;MULTIPOLYGON [m]&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plot ejpop with EJ_CRITERI</span>
+ejpopplot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(ejpop) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_sf</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> EJ_CRITERI), <span class="dt">legend =</span> polygon) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Dark2&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;EJ Populations in Worcester, MA&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#1B9E77&quot;</span>, <span class="st">&quot;#D95F02&quot;</span>, <span class="st">&quot;#7570B3&quot;</span>, <span class="st">&quot;#E7298A&quot;</span>, <span class="st">&quot;#66A61E&quot;</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Income&quot;</span>, <span class="st">&quot;Minority&quot;</span>, <span class="st">&quot;Minority and English Isolation&quot;</span>, <span class="st">&quot;Minority and Income&quot;</span>, <span class="st">&quot;Minority, Income, and English Isolation&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;EJ Population</span><span class="ch">\n</span><span class="st">Criteria&quot;</span>)
+ejpopplot</code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save output to a .png</span>
+<span class="kw">ggsave</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_ejpop.png&quot;</span>, <span class="dt">plot =</span> ejpopplot, <span class="co">#device = NULL, path = &quot;C:/Users/Brenna Robeson/OneDrive/IDCE30109/emilee_boscrime/a6_ejpop.png&quot;,</span>
+  <span class="dt">scale =</span> <span class="dv">1</span>, <span class="dt">limitsize =</span> <span class="ot">TRUE</span>)</code></pre></div>
+</div>
+<div id="worcester-property-parcels" class="section level5">
+<h5>Worcester Property Parcels</h5>
+<p>Source: City of Worcester</p>
+<p>Year: 2019</p>
+<p>Data Format: Shapefile</p>
+<p>This file will be used to understand land ownership. The property owner’s mailing address fields will be of interest based on if it is the same as the actual parcel and will eventually be geocoded.</p>
+<p>Key variable to be used is <code>map_par_id</code> which will be used to join spatial data to the variable <code>gis_mbl</code> in the parcel database which contains more comprehensive information about the owner and value of each property.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in parcel shape file</span>
+parcels &lt;-<span class="st"> </span><span class="kw">read_sf</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Parcels_Polygons.shp&quot;</span>)
+<span class="kw">head</span>(parcels)</code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 17 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 557775.3 ymin: 2902397 xmax: 581428.8 ymax: 2949140
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=41.71666666666667 +lat_2=42.68333333333333 +lat_0=41 +lon_0=-71.5 +x_0=199999.9999999999 +y_0=750000 +datum=NAD83 +units=us-ft +no_defs
+## # A tibble: 6 x 18
+##   MAP_PAR_ID POLY_TYPE SOURCE_BOO SOURCE_PAG  XCALC  YCALC GISGPV_MBL
+##   &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     
+## 1 &lt;NA&gt;       ROW       &lt;NA&gt;       &lt;NA&gt;       5.58e5 2.91e6 &lt;NA&gt;      
+## 2 &lt;NA&gt;       ROW       &lt;NA&gt;       &lt;NA&gt;       5.77e5 2.90e6 &lt;NA&gt;      
+## 3 &lt;NA&gt;       ROW       &lt;NA&gt;       &lt;NA&gt;       5.63e5 2.91e6 &lt;NA&gt;      
+## 4 &lt;NA&gt;       ROW       &lt;NA&gt;       &lt;NA&gt;       5.81e5 2.94e6 &lt;NA&gt;      
+## 5 &lt;NA&gt;       ROW       &lt;NA&gt;       &lt;NA&gt;       5.78e5 2.95e6 &lt;NA&gt;      
+## 6 &lt;NA&gt;       ROW       &lt;NA&gt;       &lt;NA&gt;       5.74e5 2.90e6 &lt;NA&gt;      
+## # ... with 11 more variables: SOURCE &lt;chr&gt;, PLAN_ID &lt;chr&gt;, MAP_NO &lt;chr&gt;,
+## #   LAST_EDIT &lt;dbl&gt;, BND_CHK &lt;chr&gt;, NO_MATCH &lt;chr&gt;, TOWN_ID &lt;int&gt;,
+## #   LOC_ID &lt;chr&gt;, SHAPE_Leng &lt;dbl&gt;, SHAPE_Area &lt;dbl&gt;,
+## #   geometry &lt;MULTIPOLYGON [US_survey_foot]&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project parcels to EPSG:32618, WSG84 UTM Zone 18N</span>
+parcels &lt;-<span class="st"> </span><span class="kw">st_transform</span>(<span class="dt">x =</span> parcels, <span class="dt">crs =</span> <span class="kw">st_crs</span>(<span class="st">&quot;+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_as_sf</span>()
+
+<span class="co"># intersect parcel data wtih object from ejpop census block group to show subset of parcel data</span>
+testarea &lt;-<span class="st"> </span>ejpop <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>st_as_sf
+<span class="co"># par(mar = rep(0, 4))</span>
+<span class="co"># plot(st_geometry(parcels), col = &quot;grey&quot;)</span>
+<span class="co"># plot(st_geometry(testarea), col = &quot;purple&quot;, add = TRUE)</span>
+parcels_testarea &lt;-<span class="st"> </span><span class="kw">st_intersection</span>(<span class="dt">x =</span> testarea, <span class="dt">y =</span> parcels)
+<span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>))
+<span class="co">#plot(st_geometry(parcels), col = &quot;grey&quot;)</span>
+parcels_subset &lt;-<span class="st"> </span><span class="kw">plot</span>(<span class="kw">st_geometry</span>(parcels_testarea), <span class="dt">col =</span> <span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(parcels_testarea)))</code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save output to a .png</span>
+<span class="kw">ggsave</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_parcels_subset.png&quot;</span>, <span class="dt">plot =</span> parcels_subset, <span class="dt">scale =</span> <span class="dv">1</span>, <span class="dt">limitsize =</span> <span class="ot">TRUE</span>)</code></pre></div>
+</div>
+<div id="worcester-zoning" class="section level5">
+<h5>Worcester Zoning</h5>
+<p>Source: City of Worcester</p>
+<p>Year: 2019</p>
+<p>Data Format: Shapefile</p>
+<p>Areas zoned for residential use will be filtered and used in analysis.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in zoning shape file</span>
+zoning &lt;-<span class="st"> </span><span class="kw">read_sf</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Zoning.shp&quot;</span>)
+<span class="kw">head</span>(zoning)</code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 4 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 568739.1 ymin: 2921542 xmax: 582893.1 ymax: 2933594
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=41.71666666666667 +lat_2=42.68333333333333 +lat_0=41 +lon_0=-71.5 +x_0=199999.9999999999 +y_0=750000 +datum=NAD83 +units=us-ft +no_defs
+## # A tibble: 6 x 5
+##   ZONE   NAME        Shape_Leng Shape_Area                         geometry
+##   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;  &lt;MULTIPOLYGON [US_survey_foot]&gt;
+## 1 BG-3.0 GENERAL BU~      2074.    270291. (((582782.9 2932883, 582703.6 2~
+## 2 RG-5   GENERAL RE~       883.     47987. (((576994.2 2925039, 577208.9 2~
+## 3 RG-5   GENERAL RE~      3296.    524471. (((569674.1 2924479, 569599.5 2~
+## 4 BG-3.0 GENERAL BU~      1914.    132797. (((578659.6 2921903, 578133.6 2~
+## 5 BO-1.0 BUSINESS O~      4984.    975873. (((576688.1 2925508, 576689.8 2~
+## 6 BG-2.0 GENERAL BU~      2099.    196278. (((574326.3 2925049, 574000.6 2~</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project zoning to EPSG:32618, WSG84 UTM Zone 18N</span>
+zoning &lt;-<span class="st"> </span><span class="kw">st_transform</span>(<span class="dt">x =</span> zoning, <span class="dt">crs =</span> <span class="kw">st_crs</span>(<span class="st">&quot;+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_as_sf</span>()
+
+<span class="co"># colourCount &lt;- length(unique(zoning$NAME))</span>
+<span class="co"># getPalette &lt;- colorRampPalette(brewer.pal((n = length(colourCount)), &quot;Set1&quot;))</span>
+<span class="co">#  </span>
+<span class="co"># ggplot(mtcars) + </span>
+<span class="co">#   geom_histogram(aes(factor(hp)), fill=getPalette(colourCount)) + </span>
+<span class="co">#   theme(legend.position=&quot;right&quot;)</span>
+
+<span class="co"># plot zoning by NAME</span>
+zoningplot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(zoning) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_sf</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> NAME), <span class="dt">legend =</span> polygon) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Zoning Parcels in Worcester, MA&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">'none'</span>)
+zoningplot</code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save output to a .png</span>
+<span class="kw">ggsave</span>(<span class="st">&quot;C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_zoning.png&quot;</span>, <span class="dt">plot =</span> zoningplot, <span class="co">#device = NULL, path = &quot;C:/Users/Brenna Robeson/OneDrive/IDCE30109/emilee_boscrime/a6_ejpop.png&quot;,</span>
+  <span class="dt">scale =</span> <span class="dv">1</span>, <span class="dt">limitsize =</span> <span class="ot">TRUE</span>)</code></pre></div>
+</div>
+</div>
+<div id="other-data-used-and-sources" class="section level4">
+<h4>Other Data Used and Sources</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:left;">
+Source
+</th>
+<th style="text-align:left;">
+Year
+</th>
+<th style="text-align:left;">
+Data Format
+</th>
+<th style="text-align:left;">
+Notes
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Worcester City Boundary
+</td>
+<td style="text-align:left;">
+MassGIS
+</td>
+<td style="text-align:left;">
+2014
+</td>
+<td style="text-align:left;">
+Shapefile
+</td>
+<td style="text-align:left;">
+Extracting Worcester boundary
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Census Tracts for Worcester, MA
+</td>
+<td style="text-align:left;">
+MassGIS
+</td>
+<td style="text-align:left;">
+2010
+</td>
+<td style="text-align:left;">
+Shapefile
+</td>
+<td style="text-align:left;">
+Along with Food Desert criteria, Vehicle avilibility and rentership rates data will also be joined with census tract geometry
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Census Block Groups for Worcester, MA
+</td>
+<td style="text-align:left;">
+MassGIS
+</td>
+<td style="text-align:left;">
+2010
+</td>
+<td style="text-align:left;">
+Shapefile
+</td>
+<td style="text-align:left;">
+Needed to supplement the MA Environmental Justice Populations data, which only includes information on block groups meeting its criteria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Worcester Property Parcel Ownership Database
+</td>
+<td style="text-align:left;">
+City of Worcester
+</td>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+Geodatabase Table
+</td>
+<td style="text-align:left;">
+Geodatabase table to be joined with Parcels shapefile layer
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Worcester Parking Surfaces
+</td>
+<td style="text-align:left;">
+City of Worcester
+</td>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+Shapefile
+</td>
+<td style="text-align:left;">
+Polygons created from raster data to analyze aspect of automobility infrastructure in city
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Worcester Driveway Surfaces
+</td>
+<td style="text-align:left;">
+City of Worcester
+</td>
+<td style="text-align:left;">
+2019
+</td>
+<td style="text-align:left;">
+Shapefile
+</td>
+<td style="text-align:left;">
+With parking surfaces data, will provide information on automobility infrastructure
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="code" class="section level3">
+<h3>Code</h3>
+<p>Environmental Injustice Populations Map</p>
+<ul>
+<li>Using <code>dplyr</code>, inclusively join Environmental Justice Populations file with general census block group file</li>
+<li>Create a field for each of the three EJ criteria which suggests its opposite (for English Isolation, create field English Proficient), and populate those fields with the inverse values of original fields</li>
+<li>Assign symbology to plot values of new fields as a choropleth map with <code>ggplot2</code> or <code>tmap</code></li>
+</ul>
+<p>Property Ownership in “Food Deserts”</p>
+<ul>
+<li>Make exploratory choropleth map of renter rates by census tract, loaded into R with <code>tidycensus</code></li>
+<li>Create a continuous feature from all census tracts classified as “food deserts” with <code>sf</code></li>
+<li>Clip the Property Parcel data with the food deserts object</li>
+<li>Filter out only property owners whose mailing addresses are in Worcester, to contain the scale of analysis</li>
+<li>Geocode the mailing addresses of the property owners whose property falls within the food desert using <code>ggmap</code></li>
+<li>Map the owner addresses with their property parcels using lines to connect the two using <code>tmap</code> or <code>ggplot</code></li>
+<li>Analyze the demographic context, using the food desert boundary (and EJ polygons for deeper context), of where the owner’s address lands to understand if owners live in non-food desert areas or not</li>
+</ul>
+<p>Automobility for White Flight and Insulation</p>
+<ul>
+<li>Make exploratory choropleth map of vehicle availability by census tract, loaded into R with <code>tidycensus</code></li>
+<li>Read zoning layer into R as <code>sf</code> object with parking lots and driveways data</li>
+<li>Clip parking and driveway data with zoning polygons associated with residential land uses</li>
+<li>Calculate the ratio of area of parking/driveway space to population in each zoning polygon area using <code>dplyr</code> and map the result with <code>ggplot2</code> or <code>tmap</code></li>
+<li>Analyze how this relates to the income, race, and language proficiency data provided by the EJ population layer with visual represenations</li>
+</ul>
+</div>
+</div>
+<div id="timeline" class="section level2">
+<h2>Timeline</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Timeframe
+</th>
+<th style="text-align:left;">
+Goals
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+April 22 – 29
+</td>
+<td style="text-align:left;">
+<ul>
+<li>Explore trends in and nature of data files you will need to clean and manipulate</li>
+<li>Explore trends in and nature of data files you will need to clean and manipulate
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+April 30 – May 2
+</td>
+<td style="text-align:left;">
+<ul>
+<li>Create Food Desert choropleth map</li>
+</ul></li>
+<li>Create Environmental Injustice Populations choropleth map</li>
+<li>Acquire census data on vehicle availability by census tract</li>
+<li>Finish geocoding mailing addresses of property owners
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+May 3 - 4
+</td>
+<td style="text-align:left;">
+<ul>
+<li>Complete draft of Rent Extraction map</li>
+</ul></li>
+<li>Create automobility and zoning outputs</li>
+<li>Draft Introduction and Methods sections of vignette
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+May 5 - 6
+</td>
+<td style="text-align:left;">
+<ul>
+<li>Draft Results and Discussion sections of vignette</li>
+</ul></li>
+<li>Ensure all coded results render without errors and as intended</li>
+<li>Review cleanliness of vignette output
+</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+</div>
+<div id="anticipated-outcomes" class="section level2">
+<h2>Anticipated Outcomes</h2>
+<blockquote>
+<p>Develop alternative ways of depicting what drives food inaccess in urban contexts</p>
+</blockquote>
+<ul>
+<li>Break into silences that often exist in socially-oriented mapping outputs that collapse and hide social dynamics and power relations</li>
+</ul>
+<blockquote>
+<p>Explore the specific role of land use, control, and ownership as a basis for these alternative viewpoints</p>
+</blockquote>
+<ul>
+<li>Understand the renter versus owner property dynamics that play out within and outside of “food desert” areas to see the extent to which the dynamic is highly uneven and potentially extractive</li>
+<li>Understand how car ownership and use is related to white flight and affluent, white families distancing themselves in homogenous sections of the city</li>
+</ul>
+<blockquote>
+<p>Use R-based spatial analysis to develop and communicate my findings</p>
+</blockquote>
+<ul>
+<li>Develop familiarity with packages designed for working with census and social-oriented vector data like <code>tidycensus</code> and processes for geocoding</li>
+<li>Identify preferred packages for displaying vector map outputs in clean and aesthetically-pleasing ways and gain comfort working with these methods</li>
+</ul>
+</div>
+<div id="sources" class="section level2">
+<h2>Sources</h2>
+<p>Shelton, Taylor. 2018. “Rethinking the RECAP: Mapping the Relational Geographies of Concentrated Poverty and Affluence in Lexington, Kentucky.” <em>Urban Geography</em> 0 (0): 1–22. <a href="https://doi.org/10.1080/02723638.2018.1433927" class="uri">https://doi.org/10.1080/02723638.2018.1433927</a>.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
