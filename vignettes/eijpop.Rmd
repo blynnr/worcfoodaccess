@@ -21,12 +21,18 @@ library(ggplot2)
 library(cowplot) # is this going to cause knitr problems?
 ```
 
-### Data Preperation
+### Objective
 
-#### Read in EJ Population and Census Block Group data for Worcester
+This mapping exercise shifts the focus from the end result of environmental (and along similar lines, food) injustice to those who help perpetuate it through residential segregation and settlement patterns in the urban design of cities. MassGIS's Environmental Justice Populations data is used to demonstrate how this alternative perspective can be made concrete. 
+
+### Mapping Process
+
+#### Data Preperation
+
+##### Read in EJ Population and Census Block Group data for Worcester
 ```{r, warning = FALSE, message = FALSE, error = TRUE}
 # read in MA Town Boundaries data
-# data source: 
+# data source: https://docs.digital.mass.gov/dataset/massgis-data-community-boundaries-towns-survey-points
 matowns <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/TOWNS_POLY.shp") 
 
 # project matowns to EPSG:32618, WSG84 UTM Zone 18N
@@ -36,7 +42,7 @@ matowns <- st_transform(x = matowns, crs = st_crs("+proj=utm +zone=18 +ellps=WGS
 worc <- matowns %>% st_as_sf() %>%  filter(TOWN == "WORCESTER")
 
 # read in ej pop data
-# data source: 
+# data source: https://docs.digital.mass.gov/dataset/massgis-data-2010-us-census-environmental-justice-populations
 maejpop <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/EJ_POLY.shp")
 
 # project maejpop to EPSG:32618, WSG84 UTM Zone 18N
@@ -47,7 +53,7 @@ ejpop <- maejpop %>% st_as_sf() %>% filter(TOWN == "WORCESTER")
 head(ejpop)
 
 # read in MA census block groups
-# data source: 
+# data source: https://docs.digital.mass.gov/dataset/massgis-data-datalayers-2010-us-census?_ga=2.217715734.1671376923.1557296954-1576956268.1544722457
 macbg <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/CENSUS2010BLOCKGROUPS_POLY.shp") 
 
 # project maejpop to EPSG:32618, WSG84 UTM Zone 18N
@@ -58,7 +64,7 @@ cbg <- macbg %>% st_as_sf() %>% filter(GEOID10 %in% 250277301001:250277331022)
 head(cbg)
 ```
 
-#### Create EIJ data
+##### Create EIJ data
 ```{r, warning = FALSE, message = FALSE, error = TRUE}
 # join ejpop's MINORITY, INCOME, ENGLISH, EJ_CRITERI columns to cbg with LOGSF1
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
@@ -87,7 +93,7 @@ cbg_ejpop <- cbg_ejpop %>%
 eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ```
 
-### Create visualizations
+#### Create visualizations
 
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center'}
 # map ejpop
@@ -118,6 +124,13 @@ gp
 ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/eijpop_plot.png", 
        width = 9, height = 4, units = "in", dpi = 300)
 ```
+
+### Limitations
+
+A limitation of this visualization that should be noted relates to the process used by MassGIS analysts for selecting "enviornmental justice population" census block groups. Block groups that might have otherwise been included were not if: 
+
+* 65% or or more the total adult population of the block group lives in university housing and/or correctional facilities
+* land use or function is not relevant to environmental justice concerns, such as parks, industrial areas, or block groups with no daytime population
 
 
 
