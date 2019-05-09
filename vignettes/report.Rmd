@@ -58,7 +58,7 @@ Specifically, in the case of my Environmental Injustice (EIJ) Populations map ab
 knitr::include_graphics("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/automob_plot.png")
 ```
 
-The automobility ratio analysis, which compares the total area of driveway infrastructure in a census block group to the total area of the building footprints, seems to confirm this clustering to a certain extent. Many polygons which were identified as White, Affluent, and English Proficient on the EIJ map had high ratios which indicates more driveway space is designated in these neighborhoods than in other parts of the city, facilitating an automobile existence. It is equally clear that many polygons identified as Minority, low income, and English isolated showed some of the lowest ratios of driveway space to built environment.
+The automobility ratio analysis, which compares the total area of driveway infrastructure in a census block group to the total area of the building footprints, seems to confirm this clustering to an extent. Many polygons which were identified as White, Affluent, and English Proficient on the EIJ map had high ratios which indicates more driveway space is designated in these neighborhoods than in other parts of the city, facilitating an automobile existence. It is equally clear that many polygons identified as Minority, low income, and English isolated showed some of the lowest ratios of driveway space to built environment.
 
 ## Discussion
 
