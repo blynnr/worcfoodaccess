@@ -30,7 +30,7 @@ This mapping exercise shifts the focus from the end result of environmental (and
 ### Data Preperation
 
 #### Read in EJ Population and Census Block Group data for Worcester
-```{r, warning = FALSE, message = FALSE, error = TRUE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 # read in MA Town Boundaries data
 # data source: https://docs.digital.mass.gov/dataset/massgis-data-community-boundaries-towns-survey-points
 matowns <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/TOWNS_POLY.shp") 
@@ -65,7 +65,7 @@ head(cbg)
 ```
 
 #### Create EIJ data
-```{r, warning = FALSE, message = FALSE, error = TRUE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 # join ejpop's MINORITY, INCOME, ENGLISH, EJ_CRITERI columns to cbg with LOGSF1
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
 
@@ -95,7 +95,7 @@ eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 
 ### Create visualizations
 
-```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 # map ejpop
 ejpopplot <- ggplot() +
   geom_sf(data = worc) +
@@ -114,7 +114,7 @@ eijpopplot <- ggplot() +
   ggtitle("Environmental Injustice Populations \nin Worcester, MA") 
 eijpopplot
 ```
-```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center', eval=FALSE}
 
 # map two side-by-side with cowplot
 gp <- cowplot::plot_grid(ejpopplot, eijpopplot)
@@ -123,6 +123,10 @@ gp
 # make a png so knit is not dependent on cowplot
 ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/eijpop_plot.png", 
        width = 9, height = 4, units = "in", dpi = 300)
+```
+
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("../figures/eijpop_plot.png")
 ```
 
 ## Limitations

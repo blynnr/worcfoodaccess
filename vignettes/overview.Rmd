@@ -57,7 +57,7 @@ Represents commonly-depended upon by public health policy makers' measure of foo
 
 Key variables to be used are LILATracts_1And10, LILATracts_halfAnd10, and CensusTract for joining with spatial data. 
 
-```{r, warning = FALSE, message = FALSE, error = TRUE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # read in food desert .csv
 worcfd <- read_csv("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/DesAtlas_2015_WorcSel.csv")
 
@@ -89,7 +89,7 @@ Of these factors, multiple or all can be found to occur in one block group.
 
 Key variables to be used are EJ_CRITERI, ENGLISH, MINORITY, and INCOME. 
 
-```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center', eval=FALSE}
 # read in ej pop data
 maejpop <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/EJ_POLY.shp")
 
@@ -113,6 +113,10 @@ ggsave("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_ejpop
   scale = 1, limitsize = TRUE)
 ```
 
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("../figures/a6_ejpop.png")
+```
+
 ##### Worcester Property Parcels
 
 Source: City of Worcester
@@ -125,7 +129,7 @@ This file will be used to understand land ownership. The property owner’s mail
 
 Key variable to be used is `map_par_id` which will be used to join spatial data to the variable `gis_mbl` in the parcel database which contains more comprehensive information about the owner and value of each property. 
 
-```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center', eval=FALSE}
 # read in parcel shape file
 parcels <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Parcels_Polygons.shp")
 head(parcels)
@@ -147,6 +151,9 @@ parcels_subset <- plot(st_geometry(parcels_testarea), col = rainbow(n = nrow(par
 ggsave("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_parcels_subset.png", plot = parcels_subset, scale = 1, limitsize = TRUE)
 ```
 
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("../figures/a6_parcels_subset.png")
+```
 
 
 ##### Worcester Zoning
@@ -159,7 +166,7 @@ Data Format: Shapefile
 
 Areas zoned for residential use will be filtered and used in analysis.
 
-```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center', eval=FALSE}
 # read in zoning shape file
 zoning <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Zoning.shp")
 head(zoning)
@@ -185,12 +192,15 @@ zoningplot
 ggsave("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_zoning.png", plot = zoningplot, #device = NULL, path = "C:/Users/Brenna Robeson/OneDrive/IDCE30109/emilee_boscrime/a6_ejpop.png",
   scale = 1, limitsize = TRUE)
 ```
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("../figures/a6_zoning.png")
+```
 
 
 #### Other Data Used and Sources
 
 
-```{r, warning = FALSE, message = FALSE, error = TRUE, echo = FALSE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, echo = FALSE, eval=FALSE}
 nm <- c("Worcester City Boundary", "Census Tracts for Worcester, MA", "Census Block Groups for Worcester, MA",  "Worcester Property Parcel Ownership Database", "Worcester Parking Surfaces", "Worcester Driveway Surfaces"
 )
 sr <- c("MassGIS", "MassGIS", "MassGIS", "City of Worcester", "City of Worcester", "City of Worcester")
