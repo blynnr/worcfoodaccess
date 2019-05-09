@@ -34,7 +34,7 @@ To do this, the ratio of parking infastructure area, represented by driveway par
 #### Read in files
 
 Read in and recreate Environmental Injustice Population data
-```{r, warning = FALSE, message = FALSE, error = TRUE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # data source: see eijpop vignette
 
 # read in ej pop data
@@ -84,7 +84,7 @@ eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ```
 
 Read in Driveways and Buildings shapefile data
-```{r, warning = FALSE, message = FALSE, error = TRUE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # read in driveways data, project to EPSG:32618, WSG84 UTM Zone 18N, and vaildate geometries
 # data source: City of Worcester
 drive <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Driveways.shp") %>% 
@@ -106,7 +106,7 @@ overratio
 
 
 ### Create Automobility Ratio
-```{r, warning = FALSE, message = FALSE, error = TRUE}
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # SPLIT 
 ### DRIVEWAYS ##################################
 # convert driveway polygons to centroids with one variable - `SHAPE_Area`
@@ -162,7 +162,7 @@ automob <- left_join(cbg_ejpop_d %>%
 
 ### Visualization
 
-```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center', eval=FALSE}
 # map Enviro Injustice Popuations for reference
 cbg_plot <- cbg %>% st_geometry()
 eijpopplot <- ggplot() +
@@ -185,7 +185,7 @@ automobplot
 
 ```
 
-```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center'}
+```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center', eval=FALSE}
 
 # map two side-by-side with cowplot
 gp <- cowplot::plot_grid(eijpopplot, automobplot)
@@ -194,6 +194,11 @@ gp
 # make a png so knit is not dependent on cowplot
 ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/automob_plot.png", 
        width = 9, height = 4, units = "in", dpi = 300)
+```
+
+
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("../figures/automob_plot.png")
 ```
 
 
