@@ -1,11 +1,12 @@
 ---
-title: "Project Report"
+title: "From Deficit to Relational Mapping for Food Justice: GIS Analysis"
+subtitle: "G346 Final Project Report"
 author: "Brenna Robeson"
 date: "May 8, 2019"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{Perspective 2: Rent Extraction from "Food Deserts"}
+  %\VignetteIndexEntry{Project Report}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
