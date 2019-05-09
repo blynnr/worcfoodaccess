@@ -21,7 +21,7 @@ library(knitr)
 Food deserts as a concept and a cartographic phenomenon provide an assessment tool to understand a major aspect of food accessibility for many urban residents. Maps focusing on single cities, as in the case of the 2015 Worcester Community Health Assessment (shown below), or on the entire country, as the USDA has modeled, use simplified criteria like income level and supermarket proximity to geographically define neighborhoods or cities as deprived or dry of any food resources (Central MA Regional Public Health Alliance 2015; “USDA ERS - Go to the Atlas” n.d.). 
 
 ```{r, out.width = "80%", echo=FALSE, fig.align='center'}
-knitr::include_graphics("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/USDA_FDMap.png")
+knitr::include_graphics("../figures/USDA_FDMap.png")
 ```
 
 While these maps elaborate on a critical component of food accessibility in assessing grocery store proximity, food justice activists and “food desert” residents assert that there is much more to the story of food access than these depictions suggest (Brones 2018). The historic and present-day injustices that shape food access does not seem to be conveyed by these static and sterile maps. In order to address the roots of food inaccess therefore, a critically-informed approach is needed that understands and produces maps as they language of power they are (Schuurman 2000).
@@ -49,13 +49,13 @@ The detailed process I took to create both outputs can be found in the two other
 Both my Environmental Injustice Populations map and automobility spatial analysis confirm urban spatial patterns that have long been experienced, perpetuated, and researched, which establish a context in which food injustice can be perpetuated. 
 
 ```{r, out.width = "80%", echo=FALSE, fig.align='center'}
-knitr::include_graphics("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/eijpop_plot.png")
+knitr::include_graphics("../figures/eijpop_plot.png")
 ```
 
 Specifically, in the case of my Environmental Injustice (EIJ) Populations map above, while this map is more conceptual than statistical in purpose, it suggests strong concentrations of block groups where households identify as both Affluent and English Proficient on the southwest and southern edges of the city, as well as a clustering of block groups representing White, Affluent, and English Proficient families across the entire west side of the city. In this map’s “holes” or silences, it can also be seen that the entire urban core is missing, meaning that the inverse categories of these three compounding oppressive categories from the Injustice map, can be seen coalescing together to form another homogenized section of the city.
 
 ```{r, out.width = "80%", echo=FALSE, fig.align='center'}
-knitr::include_graphics("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/automob_plot.png")
+knitr::include_graphics("../figures/automob_plot.png")
 ```
 
 The automobility ratio analysis, which compares the total area of driveway infrastructure in a census block group to the total area of the building footprints, seems to confirm this clustering to an extent. Many polygons which were identified as White, Affluent, and English Proficient on the EIJ map had high ratios which indicates more driveway space is designated in these neighborhoods than in other parts of the city, facilitating an automobile existence. It is equally clear that many polygons identified as Minority, low income, and English isolated showed some of the lowest ratios of driveway space to built environment.
