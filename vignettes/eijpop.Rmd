@@ -1,7 +1,7 @@
 ---
 title: "Perspective 1: Environmental Injustice Populations in Worcester, MA"
 author: "Brenna Robeson"
-date: "May 5, 2019"
+date: "May 9, 2019"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEncoding{UTF-8}
@@ -21,15 +21,15 @@ library(ggplot2)
 library(cowplot) # is this going to cause knitr problems?
 ```
 
-### Objective
+## Objective
 
-This mapping exercise shifts the focus from the end result of environmental (and along similar lines, food) injustice to those who help perpetuate it through residential segregation and settlement patterns in the urban design of cities. MassGIS's Environmental Justice Populations data is used to demonstrate how this alternative perspective can be made concrete. 
+This mapping exercise shifts the focus from the end result of environmental (and along similar lines, food) injustice to those who help perpetuate it through residential segregation and settlement patterns in the urban design of cities. MassGIS's Environmental Justice Populations data is used as an example to bring this alternative perspective to life. 
 
-### Mapping Process
+## Mapping Process
 
-#### Data Preperation
+### Data Preperation
 
-##### Read in EJ Population and Census Block Group data for Worcester
+#### Read in EJ Population and Census Block Group data for Worcester
 ```{r, warning = FALSE, message = FALSE, error = TRUE}
 # read in MA Town Boundaries data
 # data source: https://docs.digital.mass.gov/dataset/massgis-data-community-boundaries-towns-survey-points
@@ -64,7 +64,7 @@ cbg <- macbg %>% st_as_sf() %>% filter(GEOID10 %in% 250277301001:250277331022)
 head(cbg)
 ```
 
-##### Create EIJ data
+#### Create EIJ data
 ```{r, warning = FALSE, message = FALSE, error = TRUE}
 # join ejpop's MINORITY, INCOME, ENGLISH, EJ_CRITERI columns to cbg with LOGSF1
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
@@ -93,7 +93,7 @@ cbg_ejpop <- cbg_ejpop %>%
 eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ```
 
-#### Create visualizations
+### Create visualizations
 
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center'}
 # map ejpop
@@ -102,7 +102,7 @@ ejpopplot <- ggplot() +
   geom_sf(data = ejpop, aes(fill = EJ_CRITERI), legend = polygon) +
   scale_fill_brewer(palette = "Set2", name = "Criteria", labels = c("Income", "Minority", "Minority and English Isolation", "Minority and Income", "Minority, Income, and English Isolation")) + 
   coord_sf(datum = NA) +
-  ggtitle("Environmental Justice Populations \nin Worcester, MA") 
+  ggtitle("Environmental Justice Populations \nin Worcester, MA")
 ejpopplot
 
 # map eijpop
@@ -125,7 +125,7 @@ ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoo
        width = 9, height = 4, units = "in", dpi = 300)
 ```
 
-### Limitations
+## Limitations
 
 A limitation of this visualization that should be noted relates to the process used by MassGIS analysts for selecting "enviornmental justice population" census block groups. Block groups that might have otherwise been included were not if: 
 
