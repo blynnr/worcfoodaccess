@@ -145,10 +145,13 @@ testarea <- ejpop %>% slice(1) %>% st_as_sf
 # par(mar = rep(0, 4))
 # plot(st_geometry(parcels), col = "grey")
 # plot(st_geometry(testarea), col = "purple", add = TRUE)
-parcels_testarea <- st_intersection(x = testarea, y = parcels)
+parcels_testarea <- st_intersection(x = testarea, y = parcels) %>% 
+  st_geometry() 
 par(mar = rep(0, 4))
 #plot(st_geometry(parcels), col = "grey")
-parcels_subset <- plot(st_geometry(parcels_testarea), col = rainbow(n = nrow(parcels_testarea)))
+parcels_subset <- ggplot(data = parcels_testarea) +
+  geom_sf(aes(fill = MAP_PAR_ID), fill = rainbow(n = nrow(parcels_testarea %>% as_tibble)), col = "gray17")
+parcels_subset
 
 # save output to a .png
 ggsave("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/a6_parcels_subset.png", plot = parcels_subset, scale = 1, limitsize = TRUE)
