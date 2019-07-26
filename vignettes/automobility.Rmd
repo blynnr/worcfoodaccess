@@ -168,8 +168,8 @@ cbg_plot <- cbg %>% st_geometry()
 eijpopplot <- ggplot() +
   geom_sf(data = cbg_plot) +
   geom_sf(data = eijpop, aes(fill = EIJ_GRP), legend = polygon) +
-  scale_fill_brewer(palette = "Dark2", name = "Criteria", labels = c("Affluent", "Affluent and English Proficient", "English Proficient", "White, Affluent, and English Proficient", "White and English Proficient")) + 
-  ggtitle("Environmental Injustice Populations \nin Worcester, MA") +
+  scale_fill_brewer(palette = "Dark2", name = "Criteria", labels = c("Affluent", "Affluent and English \nProficient", "English Proficient", "White, Affluent, and \nEnglish Proficient", "White and English \nProficient")) + 
+  ggtitle("Environmental Injustice \nPopulations in Worcester, MA") +
   coord_sf(datum = NA)
 eijpopplot
 
@@ -179,7 +179,7 @@ automobplot <- automob %>%
 ggplot() +
   geom_sf(aes(fill = rat_cut)) +
   scale_fill_brewer(palette = "BuPu", name = "Area of Driveways:\nArea of Building \nFootprints", labels = c("0 - 0.13", "0.13 - 0.27", "0.27 - 0.40", "0.40 - 0.54", "0.54 - 0.67")) +
-  ggtitle("Automobility Infastructure Ratios by Census Block Group \nin Worcester, MA") +
+  ggtitle("Automobility Infastructure \nRatios by Census Block \nGroup in Worcester, MA") +
   coord_sf(datum = NA)
 automobplot
 
@@ -188,12 +188,12 @@ automobplot
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center', eval=FALSE}
 
 # map two side-by-side with cowplot
-gp <- cowplot::plot_grid(eijpopplot, automobplot)
+gp <- cowplot::plot_grid(eijpopplot, automobplot, ncol = 2, align = "h", label_size = 10)
 gp
 
 # make a png so knit is not dependent on cowplot
 ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/automob_plot.png", 
-       width = 9, height = 4, units = "in", dpi = 300)
+       width = 10, height = 2.5, units = "in", dpi = 300)
 ```
 
 

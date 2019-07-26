@@ -69,7 +69,7 @@ head(cbg)
 # join ejpop's MINORITY, INCOME, ENGLISH, EJ_CRITERI columns to cbg with LOGSF1
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
 
-cbg_ejpop <- left_join(cbg %>% select(GEOID10, LOGSF1) %>% as_tibble, 
+cbg_ejpop <- left_join(cbg %>% select(GEOID10, AREA_SQFT, LOGSF1) %>% as_tibble, 
                        ejjoincol %>% as.data.frame() %>% select(-geometry), 
                        by = "LOGSF1") %>% st_as_sf()
 
@@ -91,6 +91,9 @@ cbg_ejpop <- cbg_ejpop %>%
 
 # create eij pop which includes only eij populations
 eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
+
+# export eij pop layer for future use 
+st_write(eijpop, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/eijpop.shp")
 ```
 
 ### Create visualizations
@@ -100,29 +103,29 @@ eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ejpopplot <- ggplot() +
   geom_sf(data = worc) +
   geom_sf(data = ejpop, aes(fill = EJ_CRITERI), legend = polygon) +
-  scale_fill_brewer(palette = "Set2", name = "Criteria", labels = c("Income", "Minority", "Minority and English Isolation", "Minority and Income", "Minority, Income, and English Isolation")) + 
+  scale_fill_brewer(palette = "Set2", name = "Criteria", labels = c("Income", "Minority", "Minority and English \nIsolation", "Minority and Income", "Minority, Income, and \nEnglish Isolation")) + 
   coord_sf(datum = NA) +
-  ggtitle("Environmental Justice Populations \nin Worcester, MA")
+  ggtitle("Environmental Justice \nPopulations in Worcester, MA")
 ejpopplot
 
 # map eijpop
 eijpopplot <- ggplot() +
   geom_sf(data = worc) +
   geom_sf(data = eijpop, aes(fill = EIJ_GRP), legend = polygon) +
-  scale_fill_brewer(palette = "Dark2", name = "Criteria", labels = c("Affluent", "Affluent and English Proficient", "English Proficient", "White, Affluent, and English Proficient", "White and English Proficient")) + 
+  scale_fill_brewer(palette = "Dark2", name = "Criteria", labels = c("Affluent", "Affluent and English \nProficient", "English Proficient", "White, Affluent, and \nEnglish Proficient", "White and English \nProficient")) + 
   coord_sf(datum = NA) +
-  ggtitle("Environmental Injustice Populations \nin Worcester, MA") 
+  ggtitle("Environmental Injustice \nPopulations in Worcester, MA") 
 eijpopplot
 ```
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center', eval=FALSE}
 
 # map two side-by-side with cowplot
-gp <- cowplot::plot_grid(ejpopplot, eijpopplot)
+gp <- cowplot::plot_grid(ejpopplot, eijpopplot, ncol = 2, align = "h")
 gp
 
 # make a png so knit is not dependent on cowplot
 ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/eijpop_plot.png", 
-       width = 9, height = 4, units = "in", dpi = 300)
+       width = 10, height = 2.5, units = "in", dpi = 300)
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
