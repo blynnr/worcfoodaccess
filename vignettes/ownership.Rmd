@@ -64,7 +64,6 @@ fdct <- left_join(ct %>% as.data.frame, fd, by = c("GEOID10" = "CensusTract")) %
 
 Select census block groups to use for analysis
 *THINK ABOUT THEORETICAL UNDERPINNING FOR SELECTING THESE TWO GROUPS - WHAT DOES IT CONTRIBUTE TO YOUR RESEARCH QUESTION? OTHER POP YOU SHOULD BE THINKING ABOUT?... theoretical underpinning? wouldn't it be crazy if these areas of disinvestment where marginalization is concentrated were connected to these areas where privelage is super concentrated?? maybe it wouldn't actually because racial capitalism*
-*(1) why are variable names now being cutoff in eijpop? this is not good because will produce errors downstream of var names being called *(2) need to fix this to figure out how many wap areas we have... maybe need to use more stringent selection criteria to choose these? consult metrics Shelton used, see if you can find your own (3) REMEMBER THIS IS JUST A FUNCTIONAL ANSWER TO A SIMPLE QUESTION, A STIMULATION, NOT A SCIENTIFICALLY RIOURIOUS MAP. TSHELTON WROTE A WHOLE PAPER DOING THAT, SO YOU DON'T HAVE TO DO IT PERFECTLY ON TOP OF THE 5 OTHER THINGS YOU'RE ALREADY DOING
 
 ```{r}
 # select EJ Populations (MIE) which fall in food deserts
@@ -123,7 +122,7 @@ fdparcels <- fdparcels %>%
 Geocode owner addresses for each parcel
 ```{r}
 ### REGISTER GOOGLE API KEY #####################
-register_google(key = "AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0", write = TRUE)
+# register_google(key = "AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0", write = TRUE)
 ################################################
 
 # # create more comprehensive address column to address "c/o"s in MAIL_STRET
@@ -199,19 +198,6 @@ fdparcels_wown <- inner_join(x = fdparcels %>% as.data.frame, y = own_fdeij %>% 
   st_centroid()
  
 # plot parcels 
-### attempt 1 ##############################
-# need title and legend
-# ownership_eij2ej <- ggplot() +
-#   geom_sf(data = worcester, aes(fill = "gray90", col = "gray")) +
-#   geom_sf(data = fdeijpop, aes(fill = "darkgoldenrod1", col = "gray60")) +
-#   geom_sf(data = fdejpop, aes(fill = "orchid", col = "gray60")) + 
-#   geom_sf(data = fdparcels_wown, aes(col = "darkslateblue"), pch = 20) +
-#   geom_sf(data = own_fdeij, aes(col = "orangered2")) +
-#   ggtitle("Relational Property Ownership ") +
-#   coord_sf(datum = NA)
-# ownership_eij2ej
-
-### attempt 2 ##############################
 ownership_eij2ej <- ggplot() +
   geom_sf(data = worcester, fill = "gray", col = NA, show.legend = FALSE) +
   geom_sf(data = fdeijpop, aes(fill = "Non-Food Desert EIJ WAP Pop")) +
@@ -224,12 +210,18 @@ ownership_eij2ej <- ggplot() +
                       guide = guide_legend(override.aes = list(linetype = c("blank", "blank"), shape = c(16, 20)))) +
   theme(legend.key = element_rect(fill = "white")) +
   ggtitle("Relational Property Ownership Patterns \nBreaching Food Desert Boundaries in Worcester, MA") +
+  theme_void() + # Empty theme without axis lines and texts
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.box.background = element_rect(fill = "transparent", colour = NA)
+  ) +
   coord_sf(datum = NA)
 ###############################################
 # need to lighten census bg boundaries
 # fix legend lables
-# get rid of "color" and "fill" sections in legend to have everything grouped together
-# get rid of grey background outside of worcester? - how did this happen on other plots?
+# get rid of "color" and "fill" sections in legend to have everything grouped together - https://stackoverflow.com/questions/12410908/combine-legends-for-color-and-shape-into-a-single-legend
 # make points each same size? or more clearly distinct shape?
 # title centered?
 ownership_eij2ej

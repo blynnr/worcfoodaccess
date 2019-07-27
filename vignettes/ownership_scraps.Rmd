@@ -1,0 +1,357 @@
+---
+title: "Ownership map scraps"
+author: "Brenna Robeson"
+date: "July 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## RUN 1 SCRAPS
+
+### Small-scale attempt with Worc. Academy Census Block Group
+
+Read in all data
+```{r}
+# read in MA census block groups
+macbg <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/CENSUS2010BLOCKGROUPS_POLY.shp") 
+
+# project maejpop to EPSG:32618, WSG84 UTM Zone 18N
+macbg <- st_transform(x = macbg, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
+
+# filter out only Worcester block groups
+cbg <- macbg %>% st_as_sf() %>% filter(GEOID10 %in% 250277301001:250277331022)
+
+# read in property parcels (from Worcester 2019 geodatabase)
+parcels <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Parcels_Polygons_19.shp")
+head(parcels)
+
+# project parcels to EPSG:32618, WSG84 UTM Zone 18N
+parcels <- st_transform(x = parcels, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) %>% st_as_sf()
+
+# ### PARCELS TEST
+# parcels19 <- st_read(dsn = "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Worcester2019.gdb", layer = "Basemap_Parcels_Polygons")
+# parcels19 <- st_transform(x = parcels19, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) %>% 
+#   as_tibble %>% st_as_sf()
+# ###
+
+# read in property parcel ownership database (from ESRI geodatabase) as tibble
+parcelsdb <- st_read(dsn = "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Worcester2019.gdb", layer = "BASEMAP_PARCELS_DATABASE", as_tibble = TRUE)
+head(parcelsdb)
+```
+
+Prepare data associated with WA census block group for geocoding
+```{r}
+# clip parcels data with cbg geometry for WA
+wacbg <- cbg %>% filter(LOGSF1 == 171787) %>% st_as_sf()
+parcelsinter <- st_intersection(x = wacbg, y = parcels)
+#parcelswa19 <- st_intersection(x = wacbg, y = parcels19)
+
+# # test plot wacbg
+# par(mar = rep(0, 4))
+# # #plot(st_geometry(parcels), col = "grey")
+# plot(st_geometry(parcelswa), col = rainbow(n = nrow(parcelswa)))
+
+# join property parcels with their ownership data using a left_join using database field "GIS_MBL" and shapefile field "MAP_PAR_ID" and create single address field
+
+# 6/23/19: need to find parcels with multiple database records to explain discrepency between 184 parcels and 199 observations in this new variable after left_join
+# HOW TO PICK OUT WHICH PARCELS HAVE MULTIPLE RECORDS (IF THIS IS EVEN PROBLEM) AND WHAT TO DO ABOUT IT...
+parcelswa <- left_join(parcelsinter %>% select(GEOID10, POP100_RE, SHAPE_AREA, MAP_PAR_ID) %>% as.data.frame, parcelsdb %>% select(CLASS, OWNER, RODYEAR, MAIL_STRET, MAIL_CITY, MAIL_STATE, MAIL_ZIP5, VALUE, ZONE, ZONE_NAME, BLDDESC, HOUSE_NO, STREET_PRE, STREET, LND_VALU, BLD_VALU, MAIL_STR2, GIS_MBL) %>% as.data.frame, by = c("MAP_PAR_ID" = "GIS_MBL")) %>% 
+  as_tibble %>% st_as_sf() #%>% 
+  #unite(MAIL_FULL, )
+
+#############
+# WHY ARE THERE MORE RECORDS(199) THAN PARCELS(184)???
+
+# export object out of R to ArcMap to investigate duplicates
+st_write(parcelswa, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/ownership_test/parcelswadb.shp")
+
+# how many records if group_by?
+parcelswa_g <- parcelswa %>% group_by(MAP_PAR_ID) %>% summarize(OWNERCNT = __??__(MAP_PAR_ID))
+
+parcelswa_g <- parcelswa %>% tally(.$MAP_PAR_ID, sort = FALSE, name = "OWNERCNT")
+
+#############
+
+# unite(EIJ_GRP, WHITE, AFFLUENT, ENGLISHPROF, sep = "", remove = FALSE) %>% 
+#   mutate(EIJ_GRP = gsub("NA", "", EIJ_GRP)) 
+
+#length(unique(bmorehoods@data$[id]))
+
+# aggregate (with unite?) all the owner address fields
+
+# filter out those to be geocoded (aka parcels with ownership in worcester and outside of the block group?)
+
+# (if any llcs or pobox numbers, look up these addresses?)
+
+# convert these selected rows into a data frame
+```
+
+
+Geocode ownership information
+```{r}
+# use ggmap::mutate_geocode() to geocode ownership addresses
+
+# NEED TO DO MORE RESEARCH
+# OPT 1: just count how many properties registers per census block group using st_join?? and see where the ownership locations fall... is it in EIJ or EJ areas?
+# OPT 2: figure out how to get lines between parcels and ownership parcels?...
+```
+
+
+
+
+
+## RUN 2 SCRAPS
+
+
+### playing with previous scraps
+
+Read in and recreate Environmental Injustice Population data
+```{r, warning = FALSE, message = FALSE, error = TRUE}
+# data source: see eijpop vignette
+
+# read in ej pop data
+maejpop <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/EJ_POLY.shp")
+
+# project maejpop to EPSG:32618, WSG84 UTM Zone 18N
+maejpop <- st_transform(x = maejpop, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
+
+# filter out Worcester-only data and view first few rows
+ejpop <- maejpop %>% st_as_sf() %>% filter(TOWN == "WORCESTER")
+head(ejpop)
+
+# read in MA census block groups
+macbg <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/CENSUS2010BLOCKGROUPS_POLY.shp") 
+
+# project maejpop to EPSG:32618, WSG84 UTM Zone 18N
+macbg <- st_transform(x = macbg, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
+
+# filter out only Worcester block groups
+cbg <- macbg %>% st_as_sf() %>% filter(GEOID10 %in% 250277301001:250277331022)
+head(cbg)
+
+# join ejpop data to cbg data
+ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
+cbg_ejpop <- left_join(cbg %>% select(GEOID10, LOGSF1) %>% as_tibble, 
+                       ejjoincol %>% as.data.frame() %>% select(-geometry), 
+                       by = "LOGSF1") %>% st_as_sf()
+
+# # test results of join
+# ejjoincol %>% filter(LOGSF1 == 171758)
+# cbg %>% filter(LOGSF1 == 171758)
+# cbg_ejpop %>% filter(LOGSF1 == 171758)
+# 
+# cbg_ejpop %>% st_as_sf() %>% select(MINORITY) %>% plot()
+# cbg_ejpop %>% filter(!is.na(MINORITY))
+
+# create new columns WHITE, AFFLUENT, ENGLISHPROF, EIJ_CRITERI in cbg_ejpop
+cbg_ejpop <- cbg_ejpop %>% 
+  mutate(WHITE = ifelse(is.na(MINORITY), "W", NA)) %>% 
+  mutate(AFFLUENT = ifelse(is.na(INCOME), "A", NA)) %>% 
+  mutate(ENGLISHPROF = ifelse(is.na(ENGLISH), "P", NA)) %>% 
+  unite(EIJ_GRP, WHITE, AFFLUENT, ENGLISHPROF, sep = "", remove = FALSE) %>% 
+  mutate(EIJ_GRP = gsub("NA", "", EIJ_GRP)) 
+
+# create eij pop which includes only eij populations
+eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
+```
+
+
+```{r, warning = FALSE, message = FALSE, fig.width=6, fig.height=4, fig.align='center'}
+# read in parcel shape file
+parcels <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Parcels_Polygons.shp")
+head(parcels)
+
+# project parcels to EPSG:32618, WSG84 UTM Zone 18N
+parcels <- st_transform(x = parcels, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) %>% st_as_sf()
+
+# intersect parcel data wtih object from ejpop census block group to show subset of parcel data
+testarea <- ejpop %>% filter(LOGSF1 == 171787) %>% st_as_sf()
+  
+  
+  #slice(1) %>% st_as_sf
+
+# par(mar = rep(0, 4))
+# plot(st_geometry(parcels), col = "grey")
+# plot(st_geometry(testarea), col = "purple", add = TRUE)
+parcels_testarea <- st_intersection(x = testarea, y = parcels)
+par(mar = rep(0, 4))
+#plot(st_geometry(parcels), col = "grey")
+parcels_subset <- plot(st_geometry(parcels_testarea), col = rainbow(n = nrow(parcels_testarea)))
+
+```
+
+
+
+
+
+## RUN 3 SCRAPS
+
+
+
+```{r}
+### TEST - GEOCODING #############################
+set.seed(1)
+fdp_test <- fdparcels %>% sample_n(., size = 50, replace = FALSE)
+
+# create full address column
+fdp_test <- unite(fdp_test %>% as.data.frame(), ADDRESS_FULL, MAIL_STRET, MAIL_CITY, MAIL_STATE, MAIL_ZIP5, sep = ", ") %>% as_tibble()
+# create full address column that references MAIL_STR2 when c/o present
+fdp_test2 <-  fdp_test %>% mutate(ADDRESS_FULL = ifelse(str_detect(MAIL_STRET, "C/O"), unite(fdp_test %>% as.data.frame(), ADDRESS_FULL, MAIL_STR2, MAIL_CITY, MAIL_STATE, MAIL_ZIP5, sep = ", ", remove = FALSE), unite(fdp_test %>% as.data.frame(), ADDRESS_FULL, MAIL_STRET, MAIL_CITY, MAIL_STATE, MAIL_ZIP5, sep = ", ", remove = FALSE)))
+# if there are an overwhelming amount of addresses with c/o, use ifelse
+# fdp_test <- fdp_test %>% mutate(ADDRESS_FULL = ifelse(str_detect(MAIL_STRET, ), yes, no),
+#                                 ADDRESS_FULL = ifelse(test, yes, no))
+#   unite(. %>% as.data.frame(), ADDRESS_FULL, )
+
+
+
+# use address column to create new column of coordinates for ownership addresses of parcels (convert to data.frame)
+# google aip AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0
+fdp_test_gc <- fdp_test %>% as.data.frame() %>% 
+  mutate_geocode(., ADDRESS_FULL) %>% 
+  as_tibble()
+head(fdp_test_gc)
+
+
+### TEST - PLOTTING PARCEL COORDS ################
+# jk because they're from the data being randomly projected
+
+################################################
+```
+
+
+### RUN 4?? 7/18/19 SCRAPS
+
+Geocode owner addresses for each parcel
+```{r}
+### REGISTER GOOGLE API KEY #####################
+register_google(key = "AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0", write = TRUE)
+################################################
+
+# # create more comprehensive address column to address "c/o"s in MAIL_STRET
+# fdparcels <- fdparcels %>% mutate(MAIL_STR_CMB = MAIL_STR) %>% # how to identify c/os??? grepl/grep selection isn't working
+
+# assess how many might be po box numbers...
+# what does ggmap do with invalid/unlocated addresses?
+
+# # concatenate different address pieces into a full address for geocoding
+# fdparcels_add <- unite(fdparcels %>% as.data.frame(), ADDRESS_FULL, MAIL_STRET, MAIL_CITY, MAIL_STATE, MAIL_ZIP5, sep = ", ", remove = FALSE) %>% as_tibble()
+# 
+# # create seperate object to geocode owner addresses
+# ownership <- fdparcels_add %>% select(MAP_PAR_ID, ADDRESS_FULL)
+# 
+# # use address column to geocode ownership locations
+# ownership_gc <- ownership %>% as.data.frame() %>% 
+#   mutate_geocode(., ADDRESS_FULL) %>% 
+#   as_tibble()
+# head(ownership_gc)
+
+# # save results of geocoding to .csv 
+# st_write(ownership_gc, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/ownership_gccoord.csv")
+
+# read in csv with geocoded ownership addresses
+ownership_gc <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/fdej_ownership_gc.csv")
+
+# view geocoded ownership coordinate locations
+#filter(!is.na(lon))
+ownership_gc <- ownership_gc %>% select(MAP_PAR_ID, lon, lat) %>% filter(!lon == "") %>% st_as_sf(., coords = c("lat", "lon"), crs = 4326)
+mapview(ownership_gc)
+#st_crs(ownership_gc) <- "+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+
+# %>% # does setting crs actually project data?
+#   st_transform(x = ., crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
+
+#st_crs(ownership_gc_up) <- st_transform(ownership_gc, 4326)
+fdeijpop_up <- fdeijpop %>% st_transform(crs = st_crs(ownership_gc))
+
+sfdat <- list("fdeijpop_up" = fdeijpop_up,  "ownership_gc" = ownership_gc)
+sapply(sfdat, function(x) st_bbox(x))
+
+par(mar = c(0, 0, 0, 0))
+plot(st_geometry(fdeijpop_up), col = "grey")
+plot(st_geometry(ownership_gc), col = "blue", pch = 20, add = TRUE)
+
+
+# # sf back to tibble
+# ownership_gc_p <- bind_cols(ownership_gc %>% as_tibble %>% select(-geometry), 
+#           st_coordinates(ownership_gc) %>% as_tibble)
+# 
+# # try plotting in google maps with ggmap
+# p <- ggmap(get_googlemap(center = c(lon = 41.9, lat = -71.0),
+#                     zoom = 11, scale = 2,
+#                     maptype ='terrain',
+#                     color = 'color'))
+# p + geom_point(aes(x = X, y = Y,  colour = "blue"), data = ownership_gc_p, size = 0.5) + 
+#   theme(legend.position="bottom")
+
+# # export ownership_gc_coord as .shp
+# st_write(ownership_gc, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/fdej_ownership_gc.shp")
+
+# what are the coordinates of fdejpop centroids versus ownership coords?
+fdej_cent <- st_centroid(fdejpop)
+
+```
+
+
+## scraps from 7.23.19 edits
+
+```{r}
+# trying to properly map geocoded ownership addresses
+# proj4string(gc) <- CRS("+proj=longlat +datum=WGS84")
+# gc <- spTransform(gc, CRS(proj4string(country)))
+# 
+# # checking bbox
+# sfdat <- list("fdeijpop_up" = fdeijpop_up,  "ownership_gc" = ownership_gc)
+# sapply(sfdat, function(x) st_bbox(x))
+
+
+
+# # sf back to tibble
+# ownership_gc_p <- bind_cols(ownership_gc %>% as_tibble %>% select(-geometry), 
+#           st_coordinates(ownership_gc) %>% as_tibble)
+# 
+# # try plotting in google maps with ggmap
+# p <- ggmap(get_googlemap(center = c(lon = 41.9, lat = -71.0),
+#                     zoom = 11, scale = 2,
+#                     maptype ='terrain',
+#                     color = 'color'))
+# p + geom_point(aes(x = X, y = Y,  colour = "blue"), data = ownership_gc_p, size = 0.5) + 
+#   theme(legend.position="bottom")
+
+
+
+# what are the coordinates of fdejpop centroids versus ownership coords?
+#fdej_cent <- st_centroid(fdejpop)
+
+```
+
+
+
+
+magic of taylor
+get points for parcels within EJ
+geocode addresses of owners -> get points for this as well as output
+write some magic formula (or maybe read about spatial network analysis) - if the point of a property's owner falls in EIJ, connect the two with a line,otherwise disregard?
+  maybe connect everything at first if it's not too overwhelming for system to see signifigance of relationship (but can't assess sig without stats, so mabye skip that...)
+  orrrr - aggregate hits per census block group, then choropleth map of totals
+
+### hellooo it's saturday 7.27.19
+
+```{r}
+### attempt 1 ##############################
+# need title and legend
+# ownership_eij2ej <- ggplot() +
+#   geom_sf(data = worcester, aes(fill = "gray90", col = "gray")) +
+#   geom_sf(data = fdeijpop, aes(fill = "darkgoldenrod1", col = "gray60")) +
+#   geom_sf(data = fdejpop, aes(fill = "orchid", col = "gray60")) +
+#   geom_sf(data = fdparcels_wown, aes(col = "darkslateblue"), pch = 20) +
+#   geom_sf(data = own_fdeij, aes(col = "orangered2")) +
+#   ggtitle("Relational Property Ownership ") +
+#   coord_sf(datum = NA)
+# ownership_eij2ej
+
+### attempt 2 ##############################
+
+```
