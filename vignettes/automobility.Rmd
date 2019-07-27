@@ -83,7 +83,7 @@ cbg_ejpop <- cbg_ejpop %>%
 eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ```
 
-Read in Driveways and Buildings shapefile data
+Read in Driveways, Buildings, and Roads shapefile data
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # read in driveways data, project to EPSG:32618, WSG84 UTM Zone 18N, and vaildate geometries
 # data source: City of Worcester
@@ -102,6 +102,13 @@ head(build)
 # data exploration - overall driveway to building area ratio in Worcester
 overratio <- sum(drive$SHAPE_Area) / sum(build$Shape_Area)
 overratio
+
+# read in roads data, project to EPSG:32618, WSG84 UTM Zone 18N 
+roads <- st_read(dsn = "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Worcester2019.gdb", layer = "Basemap_Street_Centerlines", as_tibble = TRUE) %>% 
+  st_transform(x = ., crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) 
+
+# create selection of highways to be displayed over auto ratio
+highways <- roads %>% filter(ROADCLASS == "Highway")
 ```
 
 
@@ -162,6 +169,7 @@ automob <- left_join(cbg_ejpop_d %>%
 
 ### Visualization
 
+Visualization 1: EIJ Population to Raito Comparison
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center', eval=FALSE}
 # map Enviro Injustice Popuations for reference
 cbg_plot <- cbg %>% st_geometry()
@@ -177,7 +185,7 @@ eijpopplot
 automobplot <- automob %>% 
   mutate(rat_cut = cut_interval(AUTORATIO, 5)) %>% 
 ggplot() +
-  geom_sf(aes(fill = rat_cut)) +
+  geom_sf(aes(fill = rat_cut), color = NA) +
   scale_fill_brewer(palette = "BuPu", name = "Area of Driveways:\nArea of Building \nFootprints", labels = c("0 - 0.13", "0.13 - 0.27", "0.27 - 0.40", "0.40 - 0.54", "0.54 - 0.67")) +
   ggtitle("Automobility Infastructure \nRatios by Census Block \nGroup in Worcester, MA") +
   coord_sf(datum = NA)
@@ -199,6 +207,36 @@ ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoo
 
 ```{r, echo = FALSE, out.width="100%"}
 knitr::include_graphics("../figures/automob_plot.png")
+```
+
+Visualiation 2: Automobility Ratios with Highways Overlayed
+```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center', eval=FALSE}
+# map automobility ratios as choropleth and add highways
+automobhighplot <- automob %>% 
+  mutate(rat_cut = cut_interval(AUTORATIO, 5)) %>% 
+ggplot() +
+  geom_sf(aes(fill = rat_cut), color = NA) + 
+  scale_fill_brewer(palette = "BuPu", name = "Driveway-to-Building \nArea Ratio by \nCensus Block Group", #"Area of Driveways:\nArea of Building \nFootprints",
+                    labels = c("0 - 0.13", "0.13 - 0.27", "0.27 - 0.40", "0.40 - 0.54", "0.54 - 0.67"),  guide = guide_legend(override.aes = list(linetype = "blank", shape = NA))) +
+  geom_sf(data = highways, aes(color = "Highway"), show.legend = "line") +
+  scale_colour_manual(name = NULL, values = ("Highway" = "orangered2")) + 
+  theme(legend.key = element_rect(fill = "white")) +
+  ggtitle("Automobility Infastructure \nin Worcester, MA") + # fix title
+  theme_void() + # Empty theme without axis lines and texts
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.box.background = element_rect(fill = "transparent", colour = NA)
+  ) +
+  coord_sf(datum = NA)
+automobhighplot
+```
+
+```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=4, fig.align='center', eval=FALSE}
+# make a png so knit is not dependent on cowplot
+ggplot2::ggsave(automobhighplot, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/automobhigh_plot.png", 
+       width = 6, height = 5, units = "in", dpi = 300)
 ```
 
 
