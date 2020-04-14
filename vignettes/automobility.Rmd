@@ -17,14 +17,14 @@ library(dplyr)
 library(sf)
 library(tidyverse)
 library(tidycensus)
-library(tigris) # what is this for??
+#library(tigris)
 ```
 
 ## Objective
 
-In food desert mapping, theoretically if communities are not proximate to supermarkets, then cars (or public transportation) can enable food access. To consider the systemic roots of spatial food accessibility however requires urban histories of racist zoning policies and suburban resettlement patterns to have a role in the story as well. The map produced below will examine the scale of parking infastructure in different neighborhoods of the city to understand how automobility enables white flight and food access for certain residents. 
+In food desert mapping, theoretically if communities are not proximate to supermarkets, then cars (or public transportation) can enable food access. To consider the systemic roots of spatial food accessibility, however, requires urban histories of racist zoning policies and suburban resettlement patterns to have a role in the story as well. The map produced below will examine the scale of parking infastructure in different neighborhoods (census block groups) of the city to understand how automobility enables white flight and food access for certain residents. 
 
-To do this, the ratio of parking infastructure area, represented by driveway parcels, to building footprint area will be calculated by census block group and will be mapped alongside the Environmental Injustice Populations identified in the first mapping exercise.
+To do this, the ratio of personally owned parking infastructure area, represented by driveway parcels, to building footprint area will be calculated by census block group and will be mapped alongside the city's highway infastructure.
 
 
 ## Mapping Process
@@ -32,8 +32,6 @@ To do this, the ratio of parking infastructure area, represented by driveway par
 ### Data Preperation
 
 #### Read in files
-
-Read in and recreate Environmental Injustice Population data
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # data source: see eijpop vignette
 
@@ -59,7 +57,10 @@ macbg <- st_transform(x = macbg, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +
 # filter out only Worcester block groups
 cbg <- macbg %>% st_as_sf() %>% filter(GEOID10 %in% 250277301001:250277331022)
 head(cbg)
+```
 
+#### Recreate Environmental Injustice Population data
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # join ejpop data to cbg data
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
 cbg_ejpop <- left_join(cbg %>% select(GEOID10, LOGSF1) %>% as_tibble, 
@@ -86,7 +87,7 @@ cbg_ejpop <- cbg_ejpop %>%
 eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ```
 
-Read in Driveways, Buildings, and Roads shapefile data
+#### Read in Driveways, Buildings, and Roads shapefile data
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # read in driveways data, project to EPSG:32618, WSG84 UTM Zone 18N, and vaildate geometries
 # data source: City of Worcester
@@ -120,7 +121,6 @@ plot(st_geometry(worc), add = TRUE)
 
 ### Create Automobility Ratio
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
-# SPLIT 
 ### DRIVEWAYS ##################################
 # convert driveway polygons to centroids with one variable - `SHAPE_Area`
 drivecent <- drive[7] %>% st_centroid()
@@ -148,7 +148,7 @@ buildcbg <- cbg_ejpop %>%
   group_by(GEOID10) %>%
   summarize(BG_BSUM = sum(Shape_Area)) 
   
-# APPLY and COMBINE
+
 # for each block group in cbg_ejpop, divide `BG_DSUM` by `BG_BSUM` into new field `AUTORATIO`
 cbg_ejpop_d <- left_join(cbg_ejpop %>% 
                              as.data.frame, drivecbg %>% 
@@ -157,7 +157,7 @@ cbg_ejpop_d <- left_join(cbg_ejpop %>%
   as_tibble %>% st_as_sf()
 automob <- left_join(cbg_ejpop_d %>% 
               as.data.frame, buildcbg %>% 
-              as.data.frame(), #%>% select(-geometry), # why is the geo column called Shape instead of geometry? why is "geometry type" for one geometry and for buildcbg multipoint?
+              as.data.frame(), 
                        by = "GEOID10") %>%
   as_tibble %>% st_as_sf() %>% 
   mutate(AUTORATIO = BG_DSUM / BG_BSUM)
@@ -173,9 +173,9 @@ automob <- left_join(cbg_ejpop_d %>%
 ```
 
 
-### Visualization
+### Visualizations
 
-Visualization 1: EIJ Population to Raito Comparison
+#### Visualization 1: EIJ Population to Raito Comparison
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center', eval=FALSE}
 # map Enviro Injustice Popuations for reference
 cbg_plot <- cbg %>% st_geometry()
@@ -215,7 +215,7 @@ ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoo
 knitr::include_graphics("../figures/automob_plot.png")
 ```
 
-Visualiation 2: Automobility Ratios with Highways Overlayed
+#### Visualiation 2: Automobility Ratios with Highways Overlayed
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=7, fig.height=5, fig.align='center', eval=FALSE}
 # map automobility ratios as choropleth and add highways
 automobhighplot <- automob %>% 
@@ -245,9 +245,14 @@ ggplot2::ggsave(automobhighplot, filename = "C:/Users/Brenna Robeson/OneDrive/GE
        width = 6, height = 5, units = "in", dpi = 300)
 ```
 
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("../figures/automobhigh_plot.png")
+```
 
-Derive summary/analytical statistics
-```{r}
+### Other Analysis
+
+#### Derive summary/analytical statistics
+```{r, warning = FALSE, message = FALSE, error = TRUE, results="hide"}
 # how many in highest and lowest bracket touch highway
 high_union <- highways %>% st_union() %>% as_tibble() %>% st_as_sf()
 high_int <- automob %>% 
@@ -256,9 +261,9 @@ high_int <- automob %>%
 phigh <- high_int %>% filter(AUTORATIO >= 0.54)
 whigh <- high_int %>% filter(AUTORATIO <= 0.13)
 
-# sos arcgis
+# export to cross-check in ArcGIS
 # st_write(high_union, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/highwayu.shp")
-# 
+
 # st_write(high_int, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/cbghigh.shp")
 
 ```

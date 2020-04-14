@@ -18,18 +18,18 @@ library(sf)
 library(tidyverse)
 library(tidyr)
 library(ggplot2)
-library(cowplot) # is this going to cause knitr problems?
+library(cowplot)
 ```
 
 ## Objective
 
-This mapping exercise shifts the focus from the end result of environmental (and along similar lines, food) injustice to those who help perpetuate it through residential segregation and settlement patterns in the urban design of cities. MassGIS's Environmental Justice Populations data is used as an example to bring this alternative perspective to life. 
+This mapping exercise shifts the focus from the end result of environmental (and along similar lines, food) injustice to those who help perpetuate it through residential segregation and intentional settlement patterns in the urban design of cities. MassGIS's Environmental Justice Populations data is used as an example to bring this alternative perspective to life. 
 
 ## Mapping Process
 
 ### Data Preperation
+Read in Environmental Justice (EJ) Population and Census Block Group data for Worcester
 
-#### Read in EJ Population and Census Block Group data for Worcester
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 # read in MA Town Boundaries data
 # data source: https://docs.digital.mass.gov/dataset/massgis-data-community-boundaries-towns-survey-points
@@ -39,7 +39,7 @@ matowns <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Em
 matowns <- st_transform(x = matowns, crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
 
 # filter out Worcester boundary
-worc <- matowns %>% st_as_sf() %>%  filter(TOWN == "WORCESTER")
+worc <- matowns %>% st_as_sf() %>% filter(TOWN == "WORCESTER")
 
 # read in ej pop data
 # data source: https://docs.digital.mass.gov/dataset/massgis-data-2010-us-census-environmental-justice-populations
@@ -64,7 +64,7 @@ cbg <- macbg %>% st_as_sf() %>% filter(GEOID10 %in% 250277301001:250277331022)
 head(cbg)
 ```
 
-#### Create EIJ data
+### Create Environmental Injustice (EIJ) data
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 # join ejpop's MINORITY, INCOME, ENGLISH, EJ_CRITERI columns to cbg with LOGSF1
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
@@ -98,8 +98,8 @@ eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 
 ### Create visualizations
 
+#### Map EJ Populations
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
-# map ejpop
 ejpopplot <- ggplot() +
   geom_sf(data = worc, fill = "gray80", color = "gray80") +
   geom_sf(data = ejpop, aes(fill = EJ_CRITERI), legend = polygon) +
@@ -107,8 +107,10 @@ ejpopplot <- ggplot() +
   coord_sf(datum = NA) +
   ggtitle("Environmental Justice \nPopulations in Worcester, MA")
 ejpopplot
+```
 
-# map eijpop
+#### Map EIJ Populations
+```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 eijpopplot <- ggplot() +
   geom_sf(data = worc) +
   geom_sf(data = eijpop, aes(fill = EIJ_GRP), legend = polygon) +
@@ -118,9 +120,8 @@ eijpopplot <- ggplot() +
 eijpopplot
 ```
 
-Create side-by-side plot
+#### Create side-by-side plot
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=10, fig.height=5, fig.align='center', eval=FALSE}
-
 # map two side-by-side with cowplot
 gp <- cowplot::plot_grid(ejpopplot, eijpopplot, ncol = 2, align = "h")
 gp
@@ -129,7 +130,8 @@ gp
 ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/eijpop_plot.png", 
        width = 10, height = 5, units = "in", dpi = 300)
 ```
-create stacked plot
+
+#### Create stacked plot
 ```{r, warning = FALSE, message = FALSE, error = TRUE, fig.width=6, fig.height=9, fig.align='center', eval=FALSE}
 
 # map two side-by-side with cowplot
@@ -142,6 +144,7 @@ ggplot2::ggsave(gp, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoo
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
+# display plot in markdown file
 knitr::include_graphics("../figures/eijpop_plot.png")
 ```
 
@@ -151,6 +154,8 @@ A limitation of this visualization that should be noted relates to the process u
 
 * 65% or or more the total adult population of the block group lives in university housing and/or correctional facilities
 * land use or function is not relevant to environmental justice concerns, such as parks, industrial areas, or block groups with no daytime population
+
+Future versions of this excercise should seek to explore the demographic statistics of Environmental Injustice Populations more deeply so they are not simply inverses of MassGIS's categories, but in fact reflect statistically signifigant concentrations of individuals associated with the featured categories.
 
 
 
