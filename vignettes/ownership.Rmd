@@ -122,7 +122,7 @@ fdparcels <- fdparcels %>%
 Geocode owner addresses for each parcel
 ```{r}
 ### REGISTER GOOGLE API KEY #####################
-# register_google(key = "AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0", write = TRUE)
+# register_google(key = "--", write = TRUE)
 ################################################
 
 # # create more comprehensive address column to address "c/o"s in MAIL_STRET
