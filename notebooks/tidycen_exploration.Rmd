@@ -1,0 +1,163 @@
+---
+title: "Playing with tidycensus package"
+author: "Brenna Robeson"
+date: "April 24, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)      # For plotting
+library(tidycensus)   # For downloading Census data
+library(tmap)         # For creating tmap
+library(tmaptools)    # For reading and processing spatial data related to tmap
+library(dplyr)        # For data wrangling
+library(sf)        
+```
+
+### Getting set up with API Census Key
+
+```{r}
+census_api_key("32fb923db5a2b235a2824bfcc75ef908ce7aa293", install = TRUE, overwrite = TRUE)
+readRenviron("~/.Renviron")
+```
+
+### Tutorial from zevross.com blog on healthcare
+
+Tutorial on health insurance coverage for different counties
+
+#### downloading data with get_acs()
+```{r}
+CTdat12 <- get_acs("county", table = "B27001", year = 2012, 
+  output = "tidy", state = 09, geometry = FALSE) %>%
+  rename(`2012` = estimate) %>%
+  select(-NAME, -moe) 
+
+CTdat16 <- get_acs("county", table = "B27001", year = 2016, 
+  output = "tidy", state = 09, geometry = TRUE) %>%
+  rename(`2016` = estimate) %>%
+  select(-moe)
+```
+
+#### Process data
+
+```{r}
+dat <- left_join(CTdat16, CTdat12, by = c("GEOID", "variable"))
+st_geometry(dat) <- NULL # This drops the geometry and leaves a table
+head(dat)
+```
+Assign heatlh insurance categories
+```{r}
+dat <- mutate(dat,
+  cat = case_when(
+    variable %in% paste0("B27001_0",
+      c("09","12","37","40")) ~ "pop1834",
+    variable %in% paste0("B27001_0",
+      c("11","14","39","42")) ~ "pop1834ni")) %>%
+  filter(!is.na(cat))
+```
+
+summarize the data by county-year-category
+```{r}
+
+# Create long version
+dat <- tidyr::gather(dat, year, estimate, c(`2012`, `2016`))
+
+# Group the data by our new categories and sum
+dat <- group_by(dat, GEOID, NAME, year, cat) %>%
+  summarize(estimate = sum(estimate)) %>%
+  ungroup() %>%
+  tidyr::spread(cat, estimate)
+
+head(dat)
+```
+
+calculate final percentage estimates
+```{r}
+dat <- mutate(dat, est = (pop1834ni/pop1834) * 100) %>%
+  select(-c(pop1834, pop1834ni)) %>%
+  tidyr::spread(year, est) %>%
+  mutate(diff = `2016`-`2012`)
+
+head(dat)
+```
+
+#### Visualize
+
+county distributions and median pct uninsured by year using `facet_wrap`
+```{r}
+datlong <- select(dat, -diff) %>%
+  tidyr::gather(year, estimate, c(`2012`, `2016`)) %>%
+  group_by(year) %>%
+  mutate(med = round(median(estimate, na.rm = TRUE), 1))
+
+ggplot(datlong, aes(estimate)) +
+  geom_histogram(fill = "firebrick2", 
+    color = "white", bins = 60) +
+  xlab("Uninsured adults ages 18-34 by county (%)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  facet_wrap(~year, ncol = 1) +
+  geom_vline(aes(xintercept = med,
+    group = year), lty = "dashed") +
+  geom_text(aes(label = paste("Median = ", med), x = med, y = 55))
+```
+
+(ggplot configurations not relevant because only using CT data)
+
+find counties with the greatest change in pct uninsured with `dplyr::top_n`
+
+```{r}
+d2 <- top_n(dat, 2, diff) %>%
+  mutate(type = "Insured population decreased",
+    difftemp = diff)
+
+i2 <- top_n(dat, -2, diff) %>%
+  mutate(type = "Insured population increased",
+    difftemp = abs(diff))
+
+id2 <- bind_rows(list(i2, d2)) %>%
+  arrange(desc(difftemp))
+```
+
+```{r}
+ggplot(id2) + 
+  geom_col(aes(x = forcats::fct_reorder(NAME, difftemp), 
+    y = difftemp, fill = type)) +
+  coord_flip() +
+    scale_fill_manual(values = c("firebrick2", "cyan4")) +
+  theme(plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.title = element_blank()) +
+  ggtitle("Counties with the greatest change (+/-) in
+    insured population, ages 18-34, 2012-2016") +
+  ylab("Difference in % insured (2016 - 2012)") +
+  xlab("")
+```
+
+Create a geographic file with data (to be fed into `tmap`)
+
+
+```{r}
+# dat16 is our original geographic object and dat is the tabular data
+shp <- CTdat16 %>%
+  filter(variable == "B27001_001") # much faster than using distinct()
+  select(GEOID, NAME) %>%
+  left_join(dat, by = c("GEOID", "NAME")) %>%
+  arrange(GEOID) %>%
+  rename(uninsured_2012 = `2012`,
+    uninsured_2016 = `2016`,
+    uninsured_diff = diff)
+
+
+# Remove the Aleutians West from shp for display purposes.
+# NOTE: this isn't necessary since I'm using the shift_geo
+# argument in the get_acs function. However if you're not
+# using shift_geo or joining to a different spatial layer
+# for the full US you may want to consider removing this 
+# record for display purposes.
+shp <- filter(shp, GEOID != "02016")
+```
+
+
+
+

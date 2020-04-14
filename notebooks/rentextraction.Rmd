@@ -1,0 +1,38 @@
+---
+title: "Perspective 2: Rent Extraction from "Food Deserts""
+author: "Brenna Robeson"
+date: "May 8, 2019"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Perspective 2: Rent Extraction from "Food Deserts"}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Objective
+
+Analysis of the spatial dissonance between properties and their owners and rentership versus ownership patterns in “food deserts” (based on method developed by Shelton (2018))
+
+
+## Mapping Process
+
+
+
+### Data Preperation
+
+#### Read in files
+```{r}
+# 
+```
+
+
+### Visualization
+
+
+## Limitations

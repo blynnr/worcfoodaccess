@@ -186,6 +186,19 @@ own_fdeij <- st_intersection(x = fdeijpop %>% select(GEOID10, geometry), y = own
 # join parceldb data back 
 ```
 
+Try to connect property and ownership points
+```{r}
+# take sampling of food desert to wap ownership points
+set.seed(1)
+own_sample <- own_fdeij %>% sample_n(6)
+
+# st_linestring or st_cast points to linestring
+
+sline <- st_linestring(cbind(x = c(27, 27.5, 28), y = c(-15, -15.5, -16)))
+sline
+```
+
+
 Preparing data for plotting - functional map...
 ```{r}
 # load in towns data to extract worcester boundary
@@ -199,15 +212,15 @@ fdparcels_wown <- inner_join(x = fdparcels %>% as.data.frame, y = own_fdeij %>% 
  
 # plot parcels 
 ownership_eij2ej <- ggplot() +
-  geom_sf(data = worcester, fill = "gray", col = NA, show.legend = FALSE) +
+  geom_sf(data = worcester, fill = "gray80", col = "gray80", show.legend = FALSE) +
   geom_sf(data = fdeijpop, aes(fill = "Non-Food Desert EIJ WAP Pop")) +
   geom_sf(data = fdejpop, aes(fill = "Food Desert EJ MIE Pop")) +
-  geom_sf(data = fdparcels_wown, aes(colour = "Property Parcel"), pch = 20, show.legend = "point") +
+  geom_sf(data = fdparcels_wown, aes(colour = "Property Parcel"), pch = 16, show.legend = "point") +
   geom_sf(data = own_fdeij, aes(colour = "Owner Location"), show.legend = "point") +
   scale_fill_manual(name = "", values = c("Non-Food Desert EIJ WAP Pop" = "darkgoldenrod1", "Food Desert EJ MIE Pop" = "orchid"), 
                     guide = guide_legend(override.aes = list(linetype = c("blank", "blank"), shape = c(NA, NA)))) +
   scale_colour_manual(name = "", values = c("Property Parcel" = "darkslateblue", "Owner Location" = "orangered2"),
-                      guide = guide_legend(override.aes = list(linetype = c("blank", "blank"), shape = c(16, 20)))) +
+                      guide = guide_legend(override.aes = list(linetype = c("blank", "blank"), shape = c(16, 16)))) +
   theme(legend.key = element_rect(fill = "white")) +
   ggtitle("Relational Property Ownership Patterns \nBreaching Food Desert Boundaries in Worcester, MA") +
   theme_void() + # Empty theme without axis lines and texts
@@ -229,8 +242,10 @@ ownership_eij2ej
 # export map to .png
 ggplot2::ggsave(ownership_eij2ej, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/ownership_plot.png", 
        width = 6, height = 5, units = "in", dpi = 300)
-
 ```
+
+
+
 
 
 

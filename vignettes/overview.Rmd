@@ -204,8 +204,7 @@ knitr::include_graphics("../figures/a6_zoning.png")
 
 
 ```{r, warning = FALSE, message = FALSE, error = TRUE, echo = FALSE, eval=FALSE}
-nm <- c("Worcester City Boundary", "Census Tracts for Worcester, MA", "Census Block Groups for Worcester, MA",  "Worcester Property Parcel Ownership Database", "Worcester Parking Surfaces", "Worcester Driveway Surfaces"
-)
+nm <- c("Worcester City Boundary", "Census Tracts for Worcester, MA", "Census Block Groups for Worcester, MA",  "Worcester Property Parcel Ownership Database", "Worcester Parking Surfaces", "Worcester Driveway Surfaces")
 sr <- c("MassGIS", "MassGIS", "MassGIS", "City of Worcester", "City of Worcester", "City of Worcester")
 yr <- c("2014", "2010", "2010", "2019", "2019", "2019")
 dft <- c("Shapefile", "Shapefile", "Shapefile", "Geodatabase Table", "Shapefile", "Shapefile")

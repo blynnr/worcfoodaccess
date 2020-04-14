@@ -69,7 +69,7 @@ head(cbg)
 # join ejpop's MINORITY, INCOME, ENGLISH, EJ_CRITERI columns to cbg with LOGSF1
 ejjoincol <- ejpop %>% select(LOGSF1, MINORITY, INCOME, ENGLISH, EJ_CRITERI) 
 
-cbg_ejpop <- left_join(cbg %>% select(GEOID10, AREA_SQFT, LOGSF1) %>% as_tibble, 
+cbg_ejpop <- left_join(cbg %>% select(GEOID10, AREA_SQFT, POP100_RE, LOGSF1) %>% as_tibble, 
                        ejjoincol %>% as.data.frame() %>% select(-geometry), 
                        by = "LOGSF1") %>% st_as_sf()
 
@@ -101,7 +101,7 @@ eijpop <- cbg_ejpop %>% filter(EIJ_GRP != "")
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval = FALSE}
 # map ejpop
 ejpopplot <- ggplot() +
-  geom_sf(data = worc) +
+  geom_sf(data = worc, fill = "gray80", color = "gray80") +
   geom_sf(data = ejpop, aes(fill = EJ_CRITERI), legend = polygon) +
   scale_fill_brewer(palette = "Set2", name = "Criteria", labels = c("Income", "Minority", "Minority and English \nIsolation", "Minority and Income", "Minority, Income, and \nEnglish Isolation")) + 
   coord_sf(datum = NA) +

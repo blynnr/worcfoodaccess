@@ -1,0 +1,168 @@
+---
+title: "Final Project Practice - Environmental Injustice Populations in worcester, MA"
+author: "Brenna Robeson"
+date: "April 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(sf)
+library(knitr)
+library(kableExtra)
+library(plyr) # must be before dplyr
+library(dplyr)
+library(RColorBrewer)
+library(ggplot2)
+library(rgeos) # w ggplot output
+library(maptools) # w ggplot output
+#library(worcfoodaccess)
+```
+
+### Introduction
+
+In order to understand food access not as a static state of individuals in the city, but as an unjust process of building food systems in a way that feed and affirm some and not others, maps which illuminate these mechanisms and relationships are needed. 
+
+Here we will produce a map that explores some of these causal factors based on data from {r} [MassGIS] (https://docs.digital.mass.gov/dataset/massgis-data-2010-us-census-environmental-justice-populations?_ga=2.99772631.856141472.1548130339-583552954.1544722457), which has identified census block groups classified as "Environmental Justice Populations" across the state of MA. These block groups, identified based on race/ethnicity, english proficiency, and income criteria, are brought into focus because of the way communities which share these characteristics are often piled with the burdens of environmentally-damaging development. To investigate not just the targets, but the decision-makers behind such actions, mapping the inverse of these categories can reframe the conversation to talk about why certain areas are protected from environmental injustices, and along similar lines, food injustices, the richness of agency in these places to develop and mobilize such complex knowledge systems towards their respective agendas, and a starting place from which to conceptualize solutions.  
+
+
+
+
+
+### Read in Data
+
+Data needed for map creation:
+*Worcester City Boundary
+*Census Block Groups for Worcester
+*Environmental Justice POpulations (MassGIS)
+
+
+Read in .shp files
+```{r}
+# set working directory
+#setwd("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/inst/extdata/") # do I actually need to do this?
+
+# read in Worcester city boundary
+matowns <- read_sf("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/inst/extdata/TOWNS_POLY.shp") 
+matowns
+
+# read in census block groups
+macbg <- read_sf("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/inst/extdata/CENSUS2010BLOCKGROUPS_POLY.shp") 
+macbg
+
+# read in environmental justice shape files
+maejpop <- read_sf("C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/inst/extdata/EJ_POLY.shp")
+maejpop
+```
+
+
+
+### Select Worcester Spatial Data
+
+Filter out Worcester polygons
+```{r}
+# filter out Worcester boundary
+worcbound <- matowns %>% st_as_sf() %>%  filter(TOWN == "WORCESTER") 
+
+#%>% st_geometry() %>% plot()
+
+# isolate cbg polygons within Worcester 
+cbg <- macbg %>% filter(GEOID10 %in% 250277301001:250277331022) #%>% plot()
+
+# isolate ejpop polygons within Worcester
+ejpop <- maejpop %>% st_as_sf() %>% filter(TOWN == "WORCESTER") # in our practice and assignments, the data was properly formatted, but what are best practices when using shape files for preparing data for analysis? for names of columns, excessive columns, etc?
+#%>% plot()
+```
+
+#### Data Exploration of Block Groups
+
+with plot() - leads to inaccurate output
+```{r}
+# earlier attempts
+#worcejpop <- ejpop$EJ_CRITERI %>% st_as_sf()
+# worcbound %>% st_geometry() %>% plot(., col="grey")
+# ejpop["EJ_CRITERI"] %>% plot(., col=rainbow(5, start = 0.65, end = 0.9), add = TRUE)
+
+# define color scheme
+ejcol <- brewer.pal(n = 5, name = "Dark2")
+class(ejcol)
+
+# plot polygons 
+plot(worcbound[1], col = "grey", main = "Worcester Environmental Justice Populations", reset=F) # need reset when plotting sf objects over other sf objects
+plot(ejpop["EJ_CRITERI"], col = ejcol, add = TRUE) # makes census groups all different colors, but not according to their actual attribute values
+
+# testing attribute display indexing method
+plot(ejpop["INCOME"], col = "blue") # result is that all census block groups are colored blue, not just the ones actually classified as low income
+plot(ejpop, col = "blue")
+```
+
+with plot() - with correctly colored plot
+```{r}
+# create color pal
+library(RColorBrewer)
+pal <- brewer.pal(5, "Dark2") 
+class(pal)
+
+plot(ejpop["EJ_CRITERI"], main = "Environmental Justice Populations in Worcester", pal = pal)
+```
+
+
+with ggplot2
+```{r}
+ggplot(ejpop) +
+  geom_sf(aes(fill = EJ_CRITERI), legend = polygon) +
+  scale_fill_brewer(palette = "Dark2") + 
+  ggtitle("EJ Populations in Worcester, MA") +
+  scale_fill_manual(values = c("#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#66A61E"), labels = c("Income", "Minority", "Minority and English Isolation", "Minority and Income", "Minority, Income, and English Isolation"), name = "EJ Population\nCriteria") # how could I have done this without listing the hex codes
+
+```
+
+
+Attempts to map ejpop with worcbound using ggplot()
+```{r, error = TRUE, warning = TRUE}
+# trying to map with colorbrewer and with worcester boundry
+ejcol <- brewer.pal(n = 5, name = "Dark2")
+class(ejcol)
+
+
+ggplot(ejpop) + 
+  geom_sf(aes(fill = EJ_CRITERI), col = ejcol) +
+  geom_sf(worcbound[1])
+  
+  geom_sf(data = ejpop, fill = EJ_CRITERI, col = ejcol)
+
+# trying to just map ejpop with color brewer
+ejpop_sf <- st_as_sf(ejpop, coords = c("longitude", "latitude")) #%>% plot()
+class(ejpop_sf)
+  
+ggplot(ejpop) +
+  geom_sf(aes(fill = EJ_CRITERI)) +
+  geom_polygon(aes(color = EJ_CRITERI)) # need to specify x, y astetics, but how??
+  scale_color_brewer(palette = "Set1")
+```
+
+
+
+### Add Environmental Injustice Population Data
+
+adding this to Census BG attribute information 
+```{r}
+
+```
+
+
+
+### Display shapefiles with symbology
+
+
+
+
+
+
+
+
+
+
+
+
+
