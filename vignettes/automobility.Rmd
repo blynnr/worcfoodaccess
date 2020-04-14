@@ -17,7 +17,7 @@ library(dplyr)
 library(sf)
 library(tidyverse)
 library(tidycensus)
-library(tigris)
+library(tigris) # what is this for??
 ```
 
 ## Objective
@@ -36,6 +36,9 @@ To do this, the ratio of parking infastructure area, represented by driveway par
 Read in and recreate Environmental Injustice Population data
 ```{r, warning = FALSE, message = FALSE, error = TRUE, eval=FALSE}
 # data source: see eijpop vignette
+
+# read in Worcester city boundary
+worc <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/TOWNS_POLY.shp") %>% st_transform(x = ., crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) %>% filter(TOWN == "WORCESTER")
 
 # read in ej pop data
 maejpop <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/EJ_POLY.shp")
@@ -94,7 +97,7 @@ head(drive)
 
 # read in buildings data, project to EPSG:32618, WSG84 UTM Zone 18N, and vaildate geometries
 # data source: City of Worcester
-build <- read_sf("C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Basemap_Buildings.shp") %>% 
+build <- st_read(dsn = "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Worcester2019.gdb", layer = "Basemap_Buildings", as_tibble = TRUE) %>% 
   st_transform(x = ., crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) %>% 
   st_as_sf() %>% lwgeom::st_make_valid()
 head(build)
@@ -107,8 +110,11 @@ overratio
 roads <- st_read(dsn = "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/Worcester2019.gdb", layer = "Basemap_Street_Centerlines", as_tibble = TRUE) %>% 
   st_transform(x = ., crs = st_crs("+proj=utm +zone=18 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")) 
 
-# create selection of highways to be displayed over auto ratio
-highways <- roads %>% filter(ROADCLASS == "Highway")
+# create selection of highways to be displayed over auto ratio and clip out anything falling outside worcester
+highways <- roads %>% filter(ROADCLASS == "Highway") %>% st_intersection(x = worc, y = .)
+
+plot(st_geometry(highways))
+plot(st_geometry(worc), add = TRUE)
 ```
 
 
@@ -151,7 +157,7 @@ cbg_ejpop_d <- left_join(cbg_ejpop %>%
   as_tibble %>% st_as_sf()
 automob <- left_join(cbg_ejpop_d %>% 
               as.data.frame, buildcbg %>% 
-              as.data.frame() %>% select(-geometry), 
+              as.data.frame(), #%>% select(-geometry), # why is the geo column called Shape instead of geometry? why is "geometry type" for one geometry and for buildcbg multipoint?
                        by = "GEOID10") %>%
   as_tibble %>% st_as_sf() %>% 
   mutate(AUTORATIO = BG_DSUM / BG_BSUM)
@@ -237,6 +243,24 @@ automobhighplot
 # make a png so knit is not dependent on cowplot
 ggplot2::ggsave(automobhighplot, filename = "C:/Users/Brenna Robeson/OneDrive/GEOG346/worcfoodaccess/figures/automobhigh_plot.png", 
        width = 6, height = 5, units = "in", dpi = 300)
+```
+
+
+Derive summary/analytical statistics
+```{r}
+# how many in highest and lowest bracket touch highway
+high_union <- highways %>% st_union() %>% as_tibble() %>% st_as_sf()
+high_int <- automob %>% 
+  slice(st_intersects(x = high_union, y = automob)[[1]]) %>%
+  mutate(AUTORATIO = as.numeric(AUTORATIO))
+phigh <- high_int %>% filter(AUTORATIO >= 0.54)
+whigh <- high_int %>% filter(AUTORATIO <= 0.13)
+
+# sos arcgis
+# st_write(high_union, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/highwayu.shp")
+# 
+# st_write(high_int, "C:/Users/Brenna Robeson/OneDrive/Masters_Research_Project/Empirics/GIS_Analysis/extdata/cbghigh.shp")
+
 ```
 
 
