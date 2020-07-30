@@ -214,7 +214,8 @@ ownership_eij2ej <- ggplot() +
     legend.background = element_rect(fill = "transparent", colour = NA),
     legend.box.background = element_rect(fill = "transparent", colour = NA)
   ) +
-  coord_sf(datum = NA)
+  coord_sf(datum = NA) #+
+  #theme(plot.margin = unit(c(1,1,1,1), "cm"))
 ownership_eij2ej
 
 # export map to .png
