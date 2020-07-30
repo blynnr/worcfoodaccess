@@ -208,7 +208,7 @@ fdp_test2 <-  fdp_test %>% mutate(ADDRESS_FULL = ifelse(str_detect(MAIL_STRET, "
 
 
 # use address column to create new column of coordinates for ownership addresses of parcels (convert to data.frame)
-# google aip AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0
+# google aip ***REMOVED***
 fdp_test_gc <- fdp_test %>% as.data.frame() %>% 
   mutate_geocode(., ADDRESS_FULL) %>% 
   as_tibble()
@@ -227,7 +227,7 @@ head(fdp_test_gc)
 Geocode owner addresses for each parcel
 ```{r}
 ### REGISTER GOOGLE API KEY #####################
-register_google(key = "AIzaSyBjBeWf5pvV37byqx82Vlo854-vfie3v_0", write = TRUE)
+register_google(key = "***REMOVED***", write = TRUE)
 ################################################
 
 # # create more comprehensive address column to address "c/o"s in MAIL_STRET
